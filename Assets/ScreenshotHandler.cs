@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,8 +10,9 @@ public class ScreenshotHandler : MonoBehaviour
 
     private Camera myCamera;
     private bool takeScreenshotOnNextFrame;
-    public GameObject processing;
     public Image resultImage;
+    public int width;
+    public int height;
     private void Awake()
     {
         instance = this;
@@ -43,14 +44,17 @@ public class ScreenshotHandler : MonoBehaviour
 
             RenderTexture.ReleaseTemporary(renderTexture);
             myCamera.targetTexture = null;
-            processing.SetActive(false);
+            resultImage.gameObject.SetActive(true);
 
         }
     }
 
+    public void TakeSS()
+    {
+        TakeScreenshot(width, height);
+    }
     private void TakeScreenshot(int width, int height)
     {
-        processing.SetActive(true);
         myCamera.targetTexture = RenderTexture.GetTemporary(width, height, 16);
         takeScreenshotOnNextFrame = true;
 
@@ -61,12 +65,12 @@ public class ScreenshotHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.LogError("Press button");
-            //            ScreenCapture.CaptureScreenshot("SomeLevel");
-            TakeScreenshot(500, 500);
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Debug.LogError("Press button");
+        //    //            ScreenCapture.CaptureScreenshot("SomeLevel");
+        //    TakeScreenshot(500, 500);
+        //}
     }
 
     void OnMouseDown()
