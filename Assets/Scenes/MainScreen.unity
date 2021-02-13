@@ -9985,9 +9985,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7f039ecae8abbc4f953bf4eb6e4530f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PosePrefab: {fileID: 8772532169576166357, guid: bdbbea8e334c49f47a125c0e37cd8725,
+  PosePrefab: {fileID: 3236219012226295208, guid: 2b8e0fa532ce49f4585ba2ccd65b97f0,
     type: 3}
-  SSinstance: {fileID: 0}
+  MainCharacter: {fileID: 0}
   resultImage: {fileID: 1253025236}
   finalImage: {fileID: 1544104459}
   frame: {fileID: 788121094}

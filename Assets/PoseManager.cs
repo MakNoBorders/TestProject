@@ -7,7 +7,8 @@ public class PoseManager : MonoBehaviour
 {
 
     public GameObject PosePrefab;
-    public ScreenshotHandler SSinstance;
+    public GameObject MainCharacter;
+    private ScreenshotHandler ssHandler;
     public Image resultImage;
     public Image finalImage;
     public Image frame;
@@ -16,10 +17,10 @@ public class PoseManager : MonoBehaviour
     {
         Instantiate(PosePrefab);
         PosePrefab.AddComponent<ScreenshotHandler>();
-        SSinstance = PosePrefab.GetComponent<ScreenshotHandler>();
-        SSinstance.resultImage = resultImage;
-        SSinstance.finalImage = finalImage;
-        SSinstance.frame = frame;
+        ssHandler = PosePrefab.GetComponent<ScreenshotHandler>();
+        ssHandler.resultImage = resultImage;
+        ssHandler.finalImage = finalImage;
+        ssHandler.frame = frame;
 
     }
 

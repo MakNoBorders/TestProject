@@ -13,7 +13,7 @@ public class ScreenshotHandler : MonoBehaviour
     public Image frame;
 
     public Camera PoseCamera;
-    private bool takeScreenshotOnNextFrame;
+    private bool takeScreenshotOnNextFrame=false;
     private int width;
     private int height;
 
