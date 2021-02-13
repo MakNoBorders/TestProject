@@ -117,7 +117,7 @@ public class CharacterCustomizationUIManager : MonoBehaviour
     void ChangeCameraPosition()
     {
         StartPanelBlinkAnimation();
-        Camera.main.transform.position = new Vector3(0, 1.5f, -10.0f);
+        Camera.main.transform.position = new Vector3(-0.15f, 1.5f, -10.0f);
         Camera.main.orthographicSize = 0.5f;
 
         m_Character.GetComponent<Animator>().SetBool("Idle", true);
@@ -130,7 +130,7 @@ public class CharacterCustomizationUIManager : MonoBehaviour
     void ResetCameraPOsition()
     {
         StartPanelBlinkAnimation();
-        Camera.main.transform.position = new Vector3(0, -0.3f, -10.0f);
+        Camera.main.transform.position = new Vector3(-0.15f, -0.3f, -10.0f);
         Camera.main.orthographicSize = 2.5f;
 
         m_Character.GetComponent<Animator>().SetBool("Idle", false);
