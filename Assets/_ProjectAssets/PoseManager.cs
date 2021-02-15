@@ -19,6 +19,13 @@ public class PoseManager : MonoBehaviour
     public Image finalImage;
     public Image frame;
 
+
+    public RawImage testimage;
+
+
+    public GameObject m_Plane;
+    public float scaler;
+
     private void Awake()
     {
         instance = this;
@@ -46,6 +53,7 @@ public class PoseManager : MonoBehaviour
         InitiateScreenShot(prefab);
     }
    
+    
     
         public IEnumerator DownloadAssetBundle(string uri)
         {
@@ -88,6 +96,8 @@ public class PoseManager : MonoBehaviour
                 }
             }
         }
+
+    
     
 
     public void TakeSSFrame()
@@ -95,10 +105,69 @@ public class PoseManager : MonoBehaviour
         Texture2D bottom = frame.sprite.texture;
         Texture2D top = resultImage.sprite.texture;
 
-        Texture2D combined = bottom.AlphaBlend(top);
-        Sprite sprite = Sprite.Create(combined, new Rect(0.0f, 0.0f, combined.width, combined.height), new Vector2(0.5f, 0.5f), 100.0f);
+        //print(resultImage.GetComponent<RectTransform>().localPosition.ToString());
+
+        Texture2D temptexture = new Texture2D(bottom.width, bottom.height);
+
+        temptexture.SetPixels(bottom.GetPixels());
+        temptexture.Apply();
+
+
+        Vector3 PosDiff = -frame.rectTransform.localPosition + resultImage.rectTransform.localPosition;
+
+        int XStart = 0, YStart = 0, XEnd = 0, YEnd = 0;
+
+        if (PosDiff.x > 0)
+        {
+            XStart = (int)(PosDiff.x * scaler);
+        }
+        else
+        {
+            XStart = (int)(PosDiff.x * scaler);
+            //XEnd = bottom.width - (int)(Mathf.Abs(PosDiff.x) * scaler);
+        }
+
+        if (PosDiff.y > 0)
+        {
+            YStart = (int)(PosDiff.y * scaler);
+        }
+        else
+        {
+            YStart = (int)(PosDiff.y * scaler);
+            //YEnd = bottom.height - (int)(Mathf.Abs(PosDiff.y) * scaler);
+        }
+
+       
+
+
+
+        for (int x = XStart; x < bottom.width; x++)
+        {
+            for (int y = YStart; y < bottom.height; y++)
+            {
+                Color a = top.GetPixel(x-XStart, y- YStart);
+                if(a.a>0.5f)
+                temptexture.SetPixel(x, y, a);
+            }
+        }
+
+       // m_Plane.GetComponent<Renderer>().material.mainTexture = bottom;
+
+        temptexture.Apply();
+
+        
+
+
+
+        // return bottom;
+
+
+        // Texture2D combined = bottom.AlphaBlend(top);
+        Sprite sprite = Sprite.Create(temptexture, new Rect(0.0f, 0.0f, temptexture.width, temptexture.height), new Vector2(0.5f, 0.5f), 100.0f);
         finalImage.sprite = sprite;
         finalImage.gameObject.SetActive(true);
+
+        
     }
 
     public void GetBonesTrans(GameObject _character)
@@ -117,7 +186,7 @@ public class PoseManager : MonoBehaviour
         }
 
         _characterDownloaded.SetActive(false);
-        ssHandler.TakeScreenshot(500, 500);
+        ssHandler.TakeScreenshot(200, 200);
 
     }
 
