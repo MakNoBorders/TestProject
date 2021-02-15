@@ -17,14 +17,14 @@ public class ScreenshotHandler : MonoBehaviour
     private int width;
     private int height;
 
-  
+    private RenderTexture renderTextureOld;
 
     private void Awake()
     {
         instance = this;
         width = 500;
         height = 500;
-        PoseCamera = GetComponent<Camera>();
+        //PoseCamera = GameObject.Find("RenderCamera").GetComponent<Camera>();
     }
 
     
@@ -46,27 +46,29 @@ public class ScreenshotHandler : MonoBehaviour
 
             //byte[] byteArray = renderResult.EncodeToPNG();
             //System.IO.File.WriteAllBytes("Assets/CameraScreenshotNew.png", byteArray);
-            //Debug.LogError("TookScreenshot");
+            Debug.LogError("TookScreenshot");
 
             RenderTexture.ReleaseTemporary(renderTexture);
             PoseCamera.targetTexture = null;
+            PoseCamera.targetTexture = renderTextureOld;
             frame.gameObject.SetActive(true);
             resultImage.gameObject.SetActive(true);
-            Destroy(gameObject);
-            Destroy(PoseManager.instance._characterActive);
+            //Destroy(gameObject);
+            //Destroy(PoseManager.instance._characterActive);
 
         }
     }
 
     public void TakeScreenshot(int width, int height)
     {
+        renderTextureOld = PoseCamera.targetTexture;
         PoseCamera.targetTexture = RenderTexture.GetTemporary(width, height, 16);
         StartCoroutine(WaitForOneFrame());
     }
 
     IEnumerator WaitForOneFrame()
     {
-            yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
             takeScreenshotOnNextFrame = true;
     }
    

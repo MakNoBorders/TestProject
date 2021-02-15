@@ -1,7 +1,7 @@
 ManifestFileVersion: 0
-CRC: 2878514204
+CRC: 3194245684
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: pose
+      Name: poses
       Dependencies: {}
