@@ -21,7 +21,7 @@ namespace NatSuite.Examples {
         public int videoWidth = 1280;
         public int videoHeight = 720;
         public bool recordMicrophone;
-        public Text pathText;
+       // public Text pathText;
 
         private IMediaRecorder recorder;
         private CameraInput cameraInput;
@@ -76,7 +76,7 @@ namespace NatSuite.Examples {
             var path = await recorder.FinishWriting();
             // Playback recording
             Debug.Log($"Saved recording to: {path}");
-            pathText.text = path.ToString();
+           // pathText.text = path.ToString();
             StartCoroutine(copyPath(path));
            
            // Handheld.PlayFullScreenMovie($"file://{path}");
