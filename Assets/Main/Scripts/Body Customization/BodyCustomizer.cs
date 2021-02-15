@@ -50,15 +50,15 @@ public class BodyCustomizer : MonoBehaviour
     {
         //if (appliedMorphIndex == morphIndex) return; // if last applied morph index is same as new one then return, e.g pressing the same morph button
         ResetAllWeights();
-       // RemoveAnyExistingBlendShape(); // if any morph is applied before then reset its values, to apply the new one
-       // SaveCurrentApplieBlendShape(morphIndex, morphTo); // save the applied morph
+        // RemoveAnyExistingBlendShape(); // if any morph is applied before then reset its values, to apply the new one
+        SaveCurrentApplieBlendShape(morphFrom, morphTo); // save the applied morph
         StopAllCoroutines();
 
         //if(morphFrom!=-1)
         StartCoroutine(FaceModificationAnimation(morphTime, morphIndex, morphFrom, morphTo, animCurve)); // Apply New Morph
 
-       // if (morphFrom != -1)
-           // StartCoroutine(FaceModificationAnimation(morphTime, morphIndex, morphFrom, morphTo, animCurve)); // Apply New Morph
+        // if (morphFrom != -1)
+        // StartCoroutine(FaceModificationAnimation(morphTime, morphIndex, morphFrom, morphTo, animCurve)); // Apply New Morph
     }
 
     IEnumerator FaceModificationAnimation(float animateTime, int morphIndex, int morphFrom, int morphTo, AnimationCurve animCurve)
@@ -68,8 +68,8 @@ public class BodyCustomizer : MonoBehaviour
         {
             t += Time.fixedDeltaTime;
             float blendWeight = Mathf.Lerp(0, 100, animCurve.Evaluate(t / animateTime));
-            if(morphFrom!=-1)
-            face_SkinMeshRenderer.SetBlendShapeWeight(morphFrom, blendWeight);
+            if (morphFrom != -1)
+                face_SkinMeshRenderer.SetBlendShapeWeight(morphFrom, blendWeight);
 
             if (morphTo != -1)
                 face_SkinMeshRenderer.SetBlendShapeWeight(morphTo, blendWeight);
@@ -83,26 +83,36 @@ public class BodyCustomizer : MonoBehaviour
         //face_SkinMeshRenderer.SetBlendShapeWeight(appliedMorphIndex, 0);
     }
 
-    private void SaveCurrentApplieBlendShape(int morphIndex, float morphTo)
+    private void SaveCurrentApplieBlendShape(int l_one, int l_two)
     {
-        PlayerPrefs.SetInt("IsFaceMorphApplied", 1);
-        PlayerPrefs.SetInt("AppliedFaceMorphIndex", morphIndex);
-        PlayerPrefs.SetFloat("AppliedFaceMorphToValue", morphTo);
+        //PlayerPrefs.SetInt("IsFaceMorphApplied", 1);
+        PlayerPrefs.SetInt("FaceMorphIndexOne", l_one);
+        PlayerPrefs.SetInt("FaceMorphIndexTwo", l_two);
 
-        isMorphApplied = true;
+        //isMorphApplied = true;
         //appliedMorphIndex = morphIndex;
-        appliedMorphToValue = morphTo;
+        //appliedMorphToValue = morphTo;
+
+        appliedMorphOneIndex = l_one;
+        appliedMorphTwoIndex = l_two;
     }
 
     void LoadLastAppliedFaceMorph()
     {
-        isMorphApplied = PlayerPrefs.GetInt("IsFaceMorphApplied") == 1 ? true : false;
+        //isMorphApplied = PlayerPrefs.GetInt("IsFaceMorphApplied") == 1 ? true : false;
         //appliedMorphIndex = PlayerPrefs.GetInt("AppliedFaceMorphIndex");
-        appliedMorphToValue = PlayerPrefs.GetFloat("AppliedFaceMorphToValue");
+        //appliedMorphToValue = PlayerPrefs.GetFloat("AppliedFaceMorphToValue");
 
-        if (isMorphApplied)
+        appliedMorphOneIndex = PlayerPrefs.GetInt("FaceMorphIndexOne");
+        appliedMorphTwoIndex = PlayerPrefs.GetInt("FaceMorphIndexTwo");
+
+        if (true)//isMorphApplied)
         {
-            //face_SkinMeshRenderer.SetBlendShapeWeight(appliedMorphIndex, appliedMorphToValue);
+            if (appliedMorphOneIndex != -1)
+                face_SkinMeshRenderer.SetBlendShapeWeight(appliedMorphOneIndex, 100);
+
+            if (appliedMorphTwoIndex != -1)
+                face_SkinMeshRenderer.SetBlendShapeWeight(appliedMorphTwoIndex, 100);
         }
     }
 
@@ -110,7 +120,7 @@ public class BodyCustomizer : MonoBehaviour
     {
         int blends = face_SkinMeshRenderer.sharedMesh.blendShapeCount;
 
-        for(int i=0;i<blends;i++)
+        for (int i = 0; i < blends; i++)
         {
             face_SkinMeshRenderer.SetBlendShapeWeight(i, 0);
         }

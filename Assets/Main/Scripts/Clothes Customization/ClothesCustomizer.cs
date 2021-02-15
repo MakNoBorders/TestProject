@@ -9,7 +9,7 @@ public class ClothesCustomizer : MonoBehaviour
 {
     public static ClothesCustomizer Instance;
 
-    public enum ClothType { Shirt,Pant,Shoes}
+    public enum ClothType { Shirt, Pant, Shoes }
     [HideInInspector]
     public ClothType clothTypes;
 
@@ -26,6 +26,8 @@ public class ClothesCustomizer : MonoBehaviour
     //[Header("Shoes")]
     //public GameObject[] Shoes;
 
+    public Material[] m_Materials;
+
 
     private void Awake()
     {
@@ -33,24 +35,58 @@ public class ClothesCustomizer : MonoBehaviour
         Instance = this;
     }
 
-    public void ApplyChangesToShirt(Material material)
+    private void Start()
     {
-        Shirt.GetComponent<SkinnedMeshRenderer>().material = material;
+        LoadSavedClothes();
     }
 
-    public void ApplyChangesTopPant(Material material)
+    public void ApplyChangesToShirt(int MaterialIndex)
     {
-        Pant.GetComponent<SkinnedMeshRenderer>().material = material;
+        Shirt.GetComponent<SkinnedMeshRenderer>().material = m_Materials[MaterialIndex];
+        SaveAppliedChanges(ClothType.Shirt, MaterialIndex);
+
     }
 
-    public void ApplyChangesToShoes(Material material)
+    public void ApplyChangesTopPant(int MaterialIndex)
     {
-        Shoes.GetComponent<SkinnedMeshRenderer>().material = material;
+        Pant.GetComponent<SkinnedMeshRenderer>().material = m_Materials[MaterialIndex];
+        SaveAppliedChanges(ClothType.Pant, MaterialIndex);
+    }
+
+    public void ApplyChangesToShoes(int MaterialIndex)
+    {
+        Shoes.GetComponent<SkinnedMeshRenderer>().material = m_Materials[MaterialIndex];
+        SaveAppliedChanges(ClothType.Shoes, MaterialIndex);
     }
 
 
 
+    public void SaveAppliedChanges(ClothType clothTypes, int Index)
+    {
+        if (clothTypes == ClothType.Shirt)
+        {
+            PlayerPrefs.SetInt("Shirt", Index);
+        }
+        else if (clothTypes == ClothType.Pant)
+        {
+            PlayerPrefs.SetInt("Pant", Index);
+        }
+        else if (clothTypes == ClothType.Shoes)
+        {
+            PlayerPrefs.SetInt("Shoes", Index);
+        }
+    }
 
+    void LoadSavedClothes()
+    {
+        int shirtindex = PlayerPrefs.GetInt("Shirt");
+        int pantindex = PlayerPrefs.GetInt("Pant");
+        int shoesindex = PlayerPrefs.GetInt("Shoes");
+
+        ApplyChangesToShirt(shirtindex);
+        ApplyChangesTopPant(pantindex);
+        ApplyChangesToShoes(shoesindex);
+    }
 
 
 
@@ -91,19 +127,4 @@ public class ClothesCustomizer : MonoBehaviour
 
     }
 
-    public void SaveAppliedChanges(ClothType clothTypes,int Index)
-    {
-        if (clothTypes == ClothType.Shirt)
-        {
-
-        }
-        else if(clothTypes==ClothType.Pant)
-        {
-
-        }
-        else if(clothTypes==ClothType.Shoes)
-        {
-            
-        }
-    }
 }

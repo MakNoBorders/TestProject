@@ -25,7 +25,7 @@ public class DragImage : MonoBehaviour , IDragHandler
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.LogError("OnDrag");
+        //Debug.LogError("OnDrag");
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 

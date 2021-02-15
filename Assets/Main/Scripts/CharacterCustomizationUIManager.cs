@@ -32,6 +32,8 @@ public class CharacterCustomizationUIManager : MonoBehaviour
 
     public Color colortwo;
 
+    public GameObject m_Camera;
+
     Dictionary<int, string> panelNames_BodyCustomization = new Dictionary<int, string>();
     Dictionary<int, string> panelNames_ClothesCustomization = new Dictionary<int, string>();
 
@@ -101,7 +103,7 @@ public class CharacterCustomizationUIManager : MonoBehaviour
     {
         BodyCustomizationUISection.SetActive(true);
         ClothesCustomizationUISection.SetActive(false);
-
+        m_Camera.gameObject.SetActive(true);
         ChangeCameraPosition();
 
     }
@@ -110,7 +112,7 @@ public class CharacterCustomizationUIManager : MonoBehaviour
     {
         BodyCustomizationUISection.SetActive(false);
         ClothesCustomizationUISection.SetActive(true);
-
+        m_Camera.gameObject.SetActive(true);
         ResetCameraPOsition();
     }
 
@@ -118,7 +120,7 @@ public class CharacterCustomizationUIManager : MonoBehaviour
     {
         StartPanelBlinkAnimation();
         Camera.main.transform.position = new Vector3(-0.15f, 1.5f, -10.0f);
-        Camera.main.orthographicSize = 0.5f;
+        Camera.main.orthographicSize = 0.9f;
 
         m_Character.GetComponent<Animator>().SetBool("Idle", true);
 
@@ -131,7 +133,7 @@ public class CharacterCustomizationUIManager : MonoBehaviour
     {
         StartPanelBlinkAnimation();
         Camera.main.transform.position = new Vector3(-0.15f, -0.3f, -10.0f);
-        Camera.main.orthographicSize = 2.5f;
+        Camera.main.orthographicSize = 4.2f;
 
         m_Character.GetComponent<Animator>().SetBool("Idle", false);
 
@@ -147,8 +149,8 @@ public class CharacterCustomizationUIManager : MonoBehaviour
         Vector3 p_from = new Vector3(0, -0.3f, -10.0f);
         Vector3 p_to = new Vector3(0, 1.5f, -10.0f);
 
-        float o_from = 2.5f;
-        float o_to = 0.5f;
+        float o_from = 4.2f;
+        float o_to = 0.9f;
 
         while (l_t <=l_TimeLimit)
         {
