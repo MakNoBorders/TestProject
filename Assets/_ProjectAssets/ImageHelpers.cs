@@ -4,6 +4,21 @@ public static class ImageHelpers
 {
     public static Texture2D AlphaBlend(this Texture2D aBottom, Texture2D aTop)
     {
+        //Texture2D temptexture = new Texture2D(aBottom.width, aBottom.height);
+
+        for(int x=0;x<aBottom.height;x++)
+        {
+            for(int y=0;y<aBottom.width;y++)
+            {
+                aBottom.SetPixel(x, y, aTop.GetPixel(x, y));
+            }
+        }
+
+        aBottom.Apply();
+
+        return aBottom;
+
+        /*
         if (aBottom.width != aTop.width || aBottom.height != aTop.height)
             throw new System.InvalidOperationException("AlphaBlend only works with two equal sized images");
         var bData = aBottom.GetPixels();
@@ -24,6 +39,10 @@ public static class ImageHelpers
         var res = new Texture2D(aTop.width, aTop.height);
         res.SetPixels(rData);
         res.Apply();
+
+
         return res;
+
+        */
     }
 }

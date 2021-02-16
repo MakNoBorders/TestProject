@@ -47,14 +47,14 @@ public class AB : MonoBehaviour
 #endif
 
 #if WINDOWS
-            animPenal.SetActive(false);
+           // animPenal.SetActive(false);
            
             //InitAnim();
             StartCoroutine(GetAssetBundleFromServerUrl(url));
 #endif
 
 #if IOS
-            animPenal.SetActive(false);
+         //   animPenal.SetActive(false);
            
             //InitAnim();
             StartCoroutine(GetAssetBundleFromServerUrl(url));
@@ -162,9 +162,13 @@ public class AB : MonoBehaviour
                             classObject.transform.GetComponent<AudioSource>().Play();
                             currentAvatar.GetComponent<Animator>().runtimeAnimatorController = animator;
                             ScriptComponent.GetComponent<ReplayCam>().StartRecording();
+                            RuntimeAnimatorController ac = currentAvatar.GetComponent<Animator>().runtimeAnimatorController;
+                            float time = ac.animationClips[0].length;
+                           
+                            StartCoroutine(stopClip(time));
                             //bottomPenal.SetActive(true);
                             //rightPenal.SetActive(true);
-                           
+
                             // applayButton.SetActive(true);
                         }
                         else if (go.name.Equals("Animation_2"))
@@ -178,14 +182,19 @@ public class AB : MonoBehaviour
                            
                             animator = main.transform.GetComponent<Animator>().runtimeAnimatorController;
                             main.transform.GetChild(0).gameObject.SetActive(false);
+                            main.transform.GetChild(2).transform.gameObject.SetActive(false);
                             clipAudio = main.transform.GetChild(1).GetComponent<AudioSource>().clip;
                             classObject.transform.GetComponent<AudioSource>().clip = clipAudio;
                             classObject.transform.GetComponent<AudioSource>().Play();
                             currentAvatar.GetComponent<Animator>().runtimeAnimatorController = animator;
                             ScriptComponent.GetComponent<ReplayCam>().StartRecording();
-                           
+                            RuntimeAnimatorController ac = currentAvatar.GetComponent<Animator>().runtimeAnimatorController;
+                            float time = ac.animationClips[0].length;
+                            
+                            StartCoroutine(stopClip(time));
+
                             //bottomPenal.SetActive(true);
-                           // rightPenal.SetActive(true);
+                            // rightPenal.SetActive(true);
                             //  applayButton.SetActive(true);
                         }
                         else if (go.name.Equals("Animation_3"))
@@ -199,11 +208,16 @@ public class AB : MonoBehaviour
                          
                             animator = main.transform.GetComponent<Animator>().runtimeAnimatorController;
                             main.transform.GetChild(0).gameObject.SetActive(false);
+                            main.transform.GetChild(2).transform.gameObject.SetActive(false);
                             clipAudio = main.transform.GetChild(1).GetComponent<AudioSource>().clip;
                             classObject.transform.GetComponent<AudioSource>().clip = clipAudio;
                             classObject.transform.GetComponent<AudioSource>().Play();
                             currentAvatar.GetComponent<Animator>().runtimeAnimatorController = animator;
                             ScriptComponent.GetComponent<ReplayCam>().StartRecording();
+                            RuntimeAnimatorController ac = currentAvatar.GetComponent<Animator>().runtimeAnimatorController;
+                            float time = ac.animationClips[0].length;
+                           
+                            StartCoroutine(stopClip(time));
                             //bottomPenal.SetActive(true);
                            //rightPenal.SetActive(true);
                            
@@ -219,6 +233,11 @@ public class AB : MonoBehaviour
            
 
         }
+    }
+    IEnumerator stopClip(float count)
+    {
+        yield return new WaitForSeconds(count);
+        ScriptComponent.GetComponent<ReplayCam>().StopRecording();
     }
 
     public void bgPenalOpenClose()
@@ -362,8 +381,9 @@ public class AB : MonoBehaviour
 
     public void resetAll()
     {
-       
-        Destroy(main);
+        Debug.Log("Call");
+        StopAllCoroutines();
+        Destroy(main.gameObject);
         sceneCamera.gameObject.SetActive(true);
         single = true;
        // NextButton.SetActive(false);
