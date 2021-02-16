@@ -41,7 +41,16 @@ public class BodyCustomizer : MonoBehaviour
     void Start()
     {
         face_SkinMeshRenderer = CharacterFace.GetComponent<SkinnedMeshRenderer>();
-        LoadLastAppliedFaceMorph(); // load the last applied face morph at start
+
+        if (PlayerPrefs.GetInt("CustomFaceMorphApplied") == 1)
+        {
+            print("inside");
+           // CustomFaceMorph.Instance.LoadSaveMorphedValues();
+        }
+        else
+        {
+            LoadLastAppliedFaceMorph(); // load the last applied face morph at start
+        }
 
         //face_SkinMeshRenderer.SetBlendShapeWeight(0, 100);
     }
@@ -85,6 +94,10 @@ public class BodyCustomizer : MonoBehaviour
 
     private void SaveCurrentApplieBlendShape(int l_one, int l_two)
     {
+        // destroy 
+
+        PlayerPrefs.SetInt("CustomFaceMorphApplied", 0);
+
         //PlayerPrefs.SetInt("IsFaceMorphApplied", 1);
         PlayerPrefs.SetInt("FaceMorphIndexOne", l_one);
         PlayerPrefs.SetInt("FaceMorphIndexTwo", l_two);

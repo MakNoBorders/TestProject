@@ -101,6 +101,7 @@ public class CharacterCustomizationUIManager : MonoBehaviour
 
     public void LoadSection_BodyCustomization()
     {
+        m_Camera.SetActive(false);
         BodyCustomizationUISection.SetActive(true);
         ClothesCustomizationUISection.SetActive(false);
         m_Camera.gameObject.SetActive(true);
@@ -110,6 +111,7 @@ public class CharacterCustomizationUIManager : MonoBehaviour
 
     public void LoadSection_ClothesCustomization()
     {
+        m_Camera.SetActive(false);
         BodyCustomizationUISection.SetActive(false);
         ClothesCustomizationUISection.SetActive(true);
         m_Camera.gameObject.SetActive(true);
@@ -119,7 +121,7 @@ public class CharacterCustomizationUIManager : MonoBehaviour
     void ChangeCameraPosition()
     {
         StartPanelBlinkAnimation();
-        Camera.main.transform.position = new Vector3(-0.15f, 1.5f, -10.0f);
+        Camera.main.transform.position = new Vector3(0, 1.5f, -10.0f);
         Camera.main.orthographicSize = 0.9f;
 
         m_Character.GetComponent<Animator>().SetBool("Idle", true);
@@ -132,7 +134,7 @@ public class CharacterCustomizationUIManager : MonoBehaviour
     void ResetCameraPOsition()
     {
         StartPanelBlinkAnimation();
-        Camera.main.transform.position = new Vector3(-0.15f, -0.3f, -10.0f);
+        Camera.main.transform.position = new Vector3(0, -0.3f, -10.0f);
         Camera.main.orthographicSize = 4.2f;
 
         m_Character.GetComponent<Animator>().SetBool("Idle", false);

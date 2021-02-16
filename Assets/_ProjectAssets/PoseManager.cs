@@ -28,7 +28,8 @@ public class PoseManager : MonoBehaviour
 
 
     public GameObject m_Plane;
-    public float scaler;
+    public float xscaler;
+    public float yscaler;
 
     private void Awake()
     {
@@ -152,45 +153,121 @@ public class PoseManager : MonoBehaviour
         temptexture.Apply();
 
 
-        Vector3 PosDiff = -frame.rectTransform.localPosition + resultImage.rectTransform.localPosition;
+        Vector3 PosDiff = -frame.GetComponent<RectTransform>().localPosition + resultImage.GetComponent<RectTransform>().localPosition;
 
-        int XStart = 0, YStart = 0, XEnd = 0, YEnd = 0;
+        int XStart = 0, YStart = 0, XEnd = temptexture.width, YEnd = temptexture.height;
+
+
+
+        #region Old Work
+
+        //if (PosDiff.x > 0)
+        //{
+        //    //XStart = (int)((PosDiff.x/ (Screen.width / 2))*100);
+        //    XStart= (int)(PosDiff.x * xscaler);
+        //}
+        //else
+        //{
+        //    XStart = (int)(PosDiff.x * xscaler);
+        //    // XStart = (int)((PosDiff.x / (Screen.width / 2)) * 100);
+        //    //XStart = (int)(Screen.width+ (Mathf.Abs(PosDiff.x)*xscaler));
+
+        //    // print(XStart.ToString());
+        //    // XEnd = bottom.width - (int)(Mathf.Abs(PosDiff.x) * xscaler);
+        //}
+
+        //if (PosDiff.y > 0)
+        //{
+        //    YStart = (int)(PosDiff.y * yscaler);
+        //}
+        //else if(PosDiff.y<0)
+        //{
+        //    YStart = (int)(PosDiff.y * yscaler);
+        //    //YEnd = bottom.height - (int)(Mathf.Abs(PosDiff.y) * scaler);
+        //}
+
+        //for (int x = XStart; x < bottom.width; x++)
+        //{
+        //    for (int y = YStart; y < bottom.height; y++)
+        //    {
+        //        Color a = top.GetPixel(x - XStart, y - YStart);
+        //        if (a.a > 0.5f)
+        //            temptexture.SetPixel(x, y, a);
+        //    }
+        //}
+
+        #endregion
 
         if (PosDiff.x > 0)
         {
-            XStart = (int)(PosDiff.x * scaler);
+           // XStart = (int)((((500 / 2) + PosDiff.x) / 500) * 200);
+
+            //XStart = (int)((PosDiff.x/ (Screen.width / 2))*100);
+            XStart = (int)(-PosDiff.x * xscaler);
         }
         else
         {
-            XStart = (int)(PosDiff.x * scaler);
-            //XEnd = bottom.width - (int)(Mathf.Abs(PosDiff.x) * scaler);
+
+           // XStart = (int)((((500 / 2) + PosDiff.x) / 500) * 200 );
+
+            XStart = (int)(-PosDiff.x * xscaler);
+            // XStart = (int)((PosDiff.x / (Screen.width / 2)) * 100);
+            //XStart = (int)(Screen.width+ (Mathf.Abs(PosDiff.x)*xscaler));
+
+            // print(XStart.ToString());
+            // XEnd = bottom.width - (int)(Mathf.Abs(PosDiff.x) * xscaler);
         }
 
         if (PosDiff.y > 0)
         {
-            YStart = (int)(PosDiff.y * scaler);
+            YStart = (int)(-PosDiff.y * yscaler);
+            // YStart = (int)((((500 / 2) + PosDiff.y) / 500) * 200 );
         }
-        else
+        else 
         {
-            YStart = (int)(PosDiff.y * scaler);
+            YStart = (int)(-PosDiff.y * yscaler);
+            // YStart = (int)((((500 / 2) + PosDiff.y) / 500) * 200 );
             //YEnd = bottom.height - (int)(Mathf.Abs(PosDiff.y) * scaler);
         }
 
-       
+        Color a = new Color();
 
-
-
-        for (int x = XStart; x < bottom.width; x++)
+        for (int x = 0; x < bottom.width; x++)
         {
-            for (int y = YStart; y < bottom.height; y++)
+            for (int y = 0; y < bottom.height; y++)
             {
-                Color a = top.GetPixel(x-XStart, y- YStart);
-                if(a.a>0.5f)
-                temptexture.SetPixel(x, y, a);
+                if((x+XStart)<bottom.width&&(y+YStart)<bottom.height)
+                 a = top.GetPixel(x+XStart, y+YStart);
+               
+
+                if (a.a > 0.5f)
+                    temptexture.SetPixel(x, y, a);
             }
         }
 
-       // m_Plane.GetComponent<Renderer>().material.mainTexture = bottom;
+        // print(Screen.width.ToString());
+
+        print(YStart.ToString());
+        print(XStart.ToString());
+
+        
+
+        //for (int x = 0; x < bottom.width; x++)
+        //{
+        //    for (int y = 0; y < bottom.height; y++)
+        //    {
+        //        Color a = top.GetPixel(x, y);
+        //        //if (a.a > 0.5f)
+        //        //temptexture.SetPixel(x+XStart, y+YStart, Color.black);
+
+        //        temptexture.SetPixel(x+XStart, y+YStart, Color.black);
+
+        //        //if (x >= XStart && x <= XEnd)
+        //        //    temptexture.SetPixel(x, y, Color.black);
+        //    }
+        //}
+
+        // m_Plane.GetComponent<Renderer>().material.mainTexture = bottom;
 
         temptexture.Apply();
 
@@ -205,6 +282,8 @@ public class PoseManager : MonoBehaviour
         Sprite sprite = Sprite.Create(temptexture, new Rect(0.0f, 0.0f, temptexture.width, temptexture.height), new Vector2(0.5f, 0.5f), 100.0f);
         finalImage.sprite = sprite;
         finalImage.gameObject.SetActive(true);
+
+        
     }
 
     public void GetBonesTrans(GameObject _character)

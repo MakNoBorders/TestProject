@@ -11,6 +11,10 @@ public class CustomFaceMorph : MonoBehaviour
     public Slider XMorph_Slider;
     public Slider YMorph_Slider;
 
+    [Header("Colors")]
+    public Color ColorOne;
+    public Color ColorTwo;
+
     [Header("Face Object")]
     public GameObject FaceObject;
     SkinnedMeshRenderer faceSkinMeshRenderer;
@@ -35,6 +39,12 @@ public class CustomFaceMorph : MonoBehaviour
     void Start()
     {
         faceSkinMeshRenderer = FaceObject.GetComponent<SkinnedMeshRenderer>();
+
+        if (PlayerPrefs.GetInt("CustomFaceMorphApplied") == 1)
+        {
+            //print("inside");
+            LoadSaveMorphedValues();
+        }
     }
 
     
@@ -53,6 +63,8 @@ public class CustomFaceMorph : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
+            if(isMorphTriggerSelected)
+            faceMorphTriggerSelected.GetComponent<SpriteRenderer>().color = ColorOne;
             isMorphTriggerSelected = false;
             faceMorphTriggerSelected = null;
         }
@@ -75,6 +87,9 @@ public class CustomFaceMorph : MonoBehaviour
 
         XMorph_Slider.gameObject.SetActive(horMorphIndex != -1 ? true : false);
         YMorph_Slider.gameObject.SetActive(verMorphIndex != -1 ? true : false);
+
+        XMorph_Slider.value = 0;
+        YMorph_Slider.value = 0;
     }
 
     void ApplyConstraints(GameObject selectedObject,float xmin,float xmax,float ymin,float ymax)
@@ -91,5 +106,40 @@ public class CustomFaceMorph : MonoBehaviour
 
         if(verMorphIndex!=-1)
         faceSkinMeshRenderer.SetBlendShapeWeight(verMorphIndex, YMorph_Slider.value);
+    }
+
+
+    public void ResetMorphing()
+    {
+        int count = faceSkinMeshRenderer.sharedMesh.blendShapeCount;
+
+        for(int i=0;i<count;i++)
+        {
+            faceSkinMeshRenderer.SetBlendShapeWeight(i, 0);
+        }
+    }
+
+
+    public void SaveAppliedMorphValues()
+    {
+        PlayerPrefs.SetInt("CustomFaceMorphApplied", 1);
+        int count = faceSkinMeshRenderer.sharedMesh.blendShapeCount;
+
+        PlayerPrefs.SetInt("CustomFaceMorphCount", count);
+
+        for (int i = 0; i < count; i++)
+        {
+            PlayerPrefs.SetFloat("CustomFaceMorph" + i.ToString(), faceSkinMeshRenderer.GetBlendShapeWeight(i));
+        }
+    }
+
+    public void LoadSaveMorphedValues()
+    {
+        int count = faceSkinMeshRenderer.sharedMesh.blendShapeCount;
+
+        for (int i = 0; i < count; i++)
+        {
+            faceSkinMeshRenderer.SetBlendShapeWeight(i, PlayerPrefs.GetFloat("CustomFaceMorph" + i.ToString()));
+        }
     }
 }

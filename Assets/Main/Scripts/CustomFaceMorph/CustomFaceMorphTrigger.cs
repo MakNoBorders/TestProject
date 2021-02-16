@@ -19,6 +19,7 @@ public class CustomFaceMorphTrigger : MonoBehaviour
 
     private void OnMouseDown()
     {
+        GetComponent<SpriteRenderer>().color = CustomFaceMorph.Instance.ColorTwo;
         CustomFaceMorph.Instance.SelectedFaceMorphTrigger(this.gameObject, XMin, XMax, YMin, YMax,HorMorphIndex,VerMorphIndex,hordir,verdir);
     }
 }
