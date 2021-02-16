@@ -16,7 +16,7 @@ namespace NatSuite.Recorders.Internal {
         public static string GetPath (string extension) {
             if (directory == null) {
                 var editor = Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.WindowsEditor;
-                directory = editor ? Directory.GetCurrentDirectory() : Application.persistentDataPath;
+                directory = editor ? Application.persistentDataPath : Application.persistentDataPath;
             }
             var timestamp = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
             var name = $"recording_{timestamp}{extension}";

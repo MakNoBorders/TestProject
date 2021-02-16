@@ -22,7 +22,7 @@ public class PoseManager : MonoBehaviour
     public GameObject camer;
     private static RuntimeAnimatorController mainAnim;
     public GameObject loading;
-
+    public GameObject[] toEnable;
 
     public RawImage testimage;
 
@@ -66,6 +66,11 @@ public class PoseManager : MonoBehaviour
 
     public void DownloadAnim(string url)
     {
+        foreach(GameObject objects in toEnable)
+        {
+            objects.SetActive(true);
+        }
+        toEnable[4].gameObject.SetActive(false);
         StartCoroutine(DownloadAssetBundle(url));
     }
 

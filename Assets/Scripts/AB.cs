@@ -13,6 +13,7 @@ public class AB : MonoBehaviour
     protected AnimatorOverrideController animatorOverrideController;
     GameObject main;
     public Camera sceneCamera;
+    public Camera renderCamera;
     bool single = true;
     public GameObject currentAvatar;
     public static AudioClip clipAudio;
@@ -33,6 +34,7 @@ public class AB : MonoBehaviour
     //public GameObject bottomPenal;
     private bool open=false;
     public GameObject bgImage;
+    public GameObject[] toClose; 
 
     public void Load(string url)
     {
@@ -42,7 +44,11 @@ public class AB : MonoBehaviour
             //InitAnim();
 
            // animPenal.SetActive(false);
-          
+            foreach (GameObject objects in toClose )
+            {
+                objects.SetActive(false);
+            }
+            toClose[4].gameObject.SetActive(true);
             StartCoroutine(GetAssetBundleFromServerUrl(url));
 #endif
 
@@ -375,7 +381,7 @@ public class AB : MonoBehaviour
        
         animPenal.SetActive(true);
        // BackButton.SetActive(false);
-        currentAvatar.SetActive(false);
+       // currentAvatar.SetActive(false);
         bgPenal.SetActive(false);
     }
 
@@ -385,13 +391,14 @@ public class AB : MonoBehaviour
         StopAllCoroutines();
         Destroy(main.gameObject);
         sceneCamera.gameObject.SetActive(true);
+        renderCamera.gameObject.SetActive(true);
         single = true;
        // NextButton.SetActive(false);
         //animPenal.SetActive(true);
         //bottomPenal.SetActive(false);
        // rightPenal.SetActive(false);
         //  BackButton.SetActive(false);
-        currentAvatar.SetActive(false);
+        //currentAvatar.SetActive(false);
        // bgPenal.SetActive(false);
     }
 

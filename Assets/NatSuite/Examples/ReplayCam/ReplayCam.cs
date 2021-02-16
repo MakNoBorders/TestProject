@@ -77,7 +77,7 @@ namespace NatSuite.Examples {
             // Playback recording
             Debug.Log($"Saved recording to: {path}");
            // pathText.text = path.ToString();
-            StartCoroutine(copyPath(path));
+            //StartCoroutine(copyPath(path));
            
            // Handheld.PlayFullScreenMovie($"file://{path}");
         }
