@@ -4023,6 +4023,10 @@ MonoBehaviour:
   m_Plane: {fileID: 0}
   xscaler: 0.15
   yscaler: 0.15
+  XBottomStart: 0
+  XTopStart: 0
+  YBottomStart: 0
+  YTopStart: 0
 --- !u!4 &144704331
 Transform:
   m_ObjectHideFlags: 0
@@ -7420,7 +7424,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1771511629}
-  m_Father: {fileID: 781047661}
+  m_Father: {fileID: 857485012}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.8233363, y: 0.65267676}
@@ -17877,7 +17881,6 @@ RectTransform:
   - {fileID: 1887882495}
   - {fileID: 792222945}
   - {fileID: 1813903230}
-  - {fileID: 301472940}
   m_Father: {fileID: 779844440}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20277,6 +20280,7 @@ RectTransform:
   - {fileID: 559706354}
   - {fileID: 1228578062}
   - {fileID: 1248807582}
+  - {fileID: 301472940}
   m_Father: {fileID: 779844440}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
