@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 public class PoseManager : MonoBehaviour
 {
     public static PoseManager instance;
-    public GameObject posePrefab;
+   // public GameObject posePrefab;
     public GameObject Downloaded;
     public Animation DownloadedAnimation;
     public GameObject mainCharacter;

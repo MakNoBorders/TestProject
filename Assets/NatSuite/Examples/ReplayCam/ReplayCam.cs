@@ -26,30 +26,32 @@ namespace NatSuite.Examples {
         private IMediaRecorder recorder;
         private CameraInput cameraInput;
         private AudioInput audioInput;
-        private AudioSource microphoneSource;
+        public GameObject microphoneSource;
        // public Button startBtn;
        // public Button stopBtn;
         private IEnumerator Start () {
             // Start microphone
-            microphoneSource = gameObject.AddComponent<AudioSource>();
-            microphoneSource.mute =
-            microphoneSource.loop = true;
-            microphoneSource.bypassEffects =
-            microphoneSource.bypassListenerEffects = false;
-           // microphoneSource.clip = Microphone.Start(null, true, 10, AudioSettings.outputSampleRate);
-            microphoneSource.clip = AB.clipAudio;
+            microphoneSource.AddComponent<AudioSource>();
+            microphoneSource.AddComponent<AudioListener>();
+            microphoneSource.GetComponent<AudioSource>().loop = true;
+            microphoneSource.GetComponent<AudioSource>().mute = false;
+            microphoneSource.GetComponent<AudioSource>().bypassEffects =
+             microphoneSource.GetComponent<AudioSource>().bypassListenerEffects = false;
+            // microphoneSource.clip = Microphone.Start(null, true, 10, AudioSettings.outputSampleRate);
+            microphoneSource.GetComponent<AudioSource>().clip = AB.clipAudio;
             yield return new WaitUntil(() => Microphone.GetPosition(null) > 0);
-            microphoneSource.Play();
+            microphoneSource.GetComponent<AudioSource>().Play();
 
         }
 
         private void OnDestroy () {
             // Stop microphone
-            microphoneSource.Stop();
+            microphoneSource.GetComponent<AudioSource>().Stop();
             Microphone.End(null);
         }
 
         public void StartRecording () {
+            microphoneSource.GetComponent<AudioSource>().Play();
             //startBtn.interactable = false;
             //stopBtn.interactable = true;
             // Start recording
@@ -60,17 +62,13 @@ namespace NatSuite.Examples {
             recorder = new MP4Recorder(videoWidth, videoHeight, frameRate, sampleRate, channelCount);
             // Create recording inputs
             cameraInput = new CameraInput(recorder, clock, Camera.main);
-            audioInput = recordMicrophone ? new AudioInput(recorder, clock, microphoneSource, true) : null;
+            audioInput = recordMicrophone ? new AudioInput(recorder, clock, microphoneSource.GetComponent<AudioSource>(), true) : null;
             // Unmute microphone
-            microphoneSource.mute = audioInput == null;
+            //microphoneSource.GetComponent<AudioSource>().mute = audioInput == null;
         }
 
         public async void StopRecording () {
-            //stopBtn.interactable = false;
-            //startBtn.interactable = true;
-            // Mute microphone
-            microphoneSource.mute = true;
-            // Stop recording
+            
             audioInput?.Dispose();
             cameraInput.Dispose();
             var path = await recorder.FinishWriting();
