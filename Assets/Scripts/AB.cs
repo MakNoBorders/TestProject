@@ -34,7 +34,9 @@ public class AB : MonoBehaviour
     //public GameObject bottomPenal;
     private bool open=false;
     public GameObject bgImage;
-    public GameObject[] toClose; 
+    public GameObject[] toClose;
+    public GameObject Frame;
+    public Sprite defaultSprite;
 
     public void Load(string url)
     {
@@ -401,5 +403,11 @@ public class AB : MonoBehaviour
         //currentAvatar.SetActive(false);
        // bgPenal.SetActive(false);
     }
+
+    public void ClearBG()
+    {
+        Frame.gameObject.GetComponent<Image>().sprite = defaultSprite;
+    }
+
 
 }
