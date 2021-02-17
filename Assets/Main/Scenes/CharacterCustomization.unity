@@ -36816,7 +36816,7 @@ MonoBehaviour:
   - panel: {fileID: 242157852}
     panelName: Shoes
   m_Character: {fileID: 2081623894}
-  BlinkAnimationPanel: {fileID: 0}
+  BlinkAnimationPanel: {fileID: 1428051306}
   m_AnimCurve:
     serializedVersion: 2
     m_Curve:
@@ -49259,7 +49259,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1611711866}
         m_MethodName: GoToMainMenu
         m_Mode: 1
         m_Arguments:
@@ -49292,7 +49292,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 857485011}
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
