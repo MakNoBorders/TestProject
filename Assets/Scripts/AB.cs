@@ -391,7 +391,7 @@ public class AB : MonoBehaviour
     {
         Debug.Log("Call");
         StopAllCoroutines();
-        Destroy(main.gameObject);
+        //Destroy(main.gameObject);
         sceneCamera.gameObject.SetActive(true);
         renderCamera.gameObject.SetActive(true);
         single = true;

@@ -17,7 +17,7 @@ public class PoseManager : MonoBehaviour
     public GameObject _characterActive;
     private ScreenshotHandler ssHandler;
     public Image resultImage;
-    public Image finalImage;
+    
     public Image frame;
     public GameObject camer;
     private static RuntimeAnimatorController mainAnim;
@@ -26,16 +26,15 @@ public class PoseManager : MonoBehaviour
 
     public RawImage testimage;
 
-
-    public GameObject m_Plane;
-    public float xscaler;
-    public float yscaler;
-
+    [Header("Take Screen Shoot")]
     public int XBottomStart;
     public int XTopStart;
-
     public int YBottomStart;
     public int YTopStart;
+
+    [Header("Final Image Panel")]
+    public GameObject m_FinalImage_Panel;
+    public Image finalImage;
 
     private void Awake()
     {
@@ -199,7 +198,9 @@ public class PoseManager : MonoBehaviour
 
         Sprite sprite = Sprite.Create(temptexture, new Rect(0.0f, 0.0f, temptexture.width, temptexture.height), new Vector2(0.5f, 0.5f), 100.0f);
         finalImage.sprite = sprite;
-        finalImage.gameObject.SetActive(true);        
+        finalImage.gameObject.SetActive(true);
+
+        m_FinalImage_Panel.SetActive(true);
     }
 
     public void GetBonesTrans(GameObject _character)
