@@ -52,6 +52,8 @@ public class BodyCustomizer : MonoBehaviour
             LoadLastAppliedFaceMorph(); // load the last applied face morph at start
         }
 
+        LoadLastAppliedBodyMorph();
+
         //face_SkinMeshRenderer.SetBlendShapeWeight(0, 100);
     }
 
@@ -128,6 +130,15 @@ public class BodyCustomizer : MonoBehaviour
                 face_SkinMeshRenderer.SetBlendShapeWeight(appliedMorphTwoIndex, 100);
         }
     }
+    
+    public void LoadLastAppliedBodyMorph()
+    {
+        if(PlayerPrefs.GetInt("IsBodyMorphApplied")==1)
+        {
+            m_Shirt.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, PlayerPrefs.GetFloat("BodyMorph"));
+            m_Pant.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, PlayerPrefs.GetFloat("BodyMorph"));
+        }
+    }
 
     void ResetAllWeights()
     {
@@ -145,5 +156,8 @@ public class BodyCustomizer : MonoBehaviour
     {
         m_Shirt.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, weight);
         m_Pant.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, weight);
+
+        PlayerPrefs.SetInt("IsBodyMorphApplied", 1);
+        PlayerPrefs.SetFloat("BodyMorph", weight);
     }
 }

@@ -930,7 +930,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  Weight: 100
+  Weight: 50
 --- !u!114 &27063180
 MonoBehaviour:
   m_ObjectHideFlags: 0
