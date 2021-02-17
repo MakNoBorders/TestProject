@@ -21375,6 +21375,17 @@ MonoBehaviour:
           m_StringArgument: https://angeluim-metaverse.s3-ap-southeast-1.amazonaws.com/unitydata/DemoAssets/Android/animation_1
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1365609732}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &886812330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22311,6 +22322,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1365609732}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &930056562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22459,8 +22481,19 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: https://angeluim-metaverse.s3-ap-southeast-1.amazonaws.com/unitydata/DemoAssets/Android/animation_3
+          m_StringArgument: https://angeluim-metaverse.s3-ap-southeast-1.amazonaws.com/unitydata/DemoAssets/Android/animation_1
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1365609732}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &930292188
 MonoBehaviour:
@@ -27064,8 +27097,19 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: https://angeluim-metaverse.s3-ap-southeast-1.amazonaws.com/unitydata/DemoAssets/Android/animation_2
+          m_StringArgument: https://angeluim-metaverse.s3-ap-southeast-1.amazonaws.com/unitydata/DemoAssets/Android/animation_1
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1365609732}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1134043635
 MonoBehaviour:
@@ -41366,6 +41410,17 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1365609732}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &1764968712
 MonoBehaviour:
