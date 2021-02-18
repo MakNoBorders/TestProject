@@ -74,10 +74,12 @@ namespace NatSuite.Examples {
             var path = await recorder.FinishWriting();
             // Playback recording
             Debug.Log($"Saved recording to: {path}");
+            string filename = Path.GetFileName(path);
+            PlayerPrefs.SetString(ConstantsGod.VIDEOPATH, filename);
            // pathText.text = path.ToString();
-            //StartCoroutine(copyPath(path));
-           
-           // Handheld.PlayFullScreenMovie($"file://{path}");
+           //StartCoroutine(copyPath(path));
+
+            // Handheld.PlayFullScreenMovie($"file://{path}");
         }
         public async void ShareVideo()
         {
