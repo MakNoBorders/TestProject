@@ -16,9 +16,9 @@ public class PoseManager : MonoBehaviour
     public GameObject _characterDownloaded;
     public GameObject _characterActive;
     private ScreenshotHandler ssHandler;
-    public Image resultImage;
     
-    public Image frame;
+    
+    
     public GameObject camer;
     private static RuntimeAnimatorController mainAnim;
     public GameObject loading;
@@ -27,14 +27,16 @@ public class PoseManager : MonoBehaviour
     public RawImage testimage;
 
     [Header("Take Screen Shoot")]
-    public int XBottomStart;
-    public int XTopStart;
-    public int YBottomStart;
-    public int YTopStart;
+    public int m_XBottomStart;
+    public int m_XTopStart;
+    public int m_YBottomStart;
+    public int m_YTopStart;
 
     [Header("Final Image Panel")]
     public GameObject m_FinalImage_Panel;
-    public Image finalImage;
+    public Image m_BackGroundImage_Image;
+    public Image m_CapturedImage_Image;
+    public Image m_FinalImage_Image;
 
     private void Awake()
     {
@@ -54,9 +56,9 @@ public class PoseManager : MonoBehaviour
         //Downloaded = Instantiate(gameObject);
         //_characterDownloaded = Downloaded.transform.GetChild(0).transform.gameObject;       
         ssHandler = camer.GetComponent<ScreenshotHandler>();
-        ssHandler.resultImage = resultImage;
-        ssHandler.finalImage = finalImage;
-        ssHandler.frame = frame;
+        ssHandler.resultImage = m_CapturedImage_Image;
+        ssHandler.finalImage = m_FinalImage_Image;
+        ssHandler.frame = m_BackGroundImage_Image;
         ssHandler.PoseCamera = camer.GetComponent<Camera>();
         ssHandler.TakeScreenshot(500, 500);
         //_characterActive = Instantiate(mainCharacter);
@@ -137,9 +139,9 @@ public class PoseManager : MonoBehaviour
         //_characterActive.gameObject.GetComponent<Animator>().runtimeAnimatorController = animController;
         //_characterActive.AddComponent<ScreenshotHandler>();
        // ssHandler = Downloaded.GetComponent<ScreenshotHandler>();
-        ssHandler.resultImage = resultImage;
-        ssHandler.finalImage = finalImage;
-        ssHandler.frame = frame;
+        ssHandler.resultImage = m_CapturedImage_Image;
+        ssHandler.finalImage = m_FinalImage_Image;
+        ssHandler.frame = m_BackGroundImage_Image;
         ssHandler.TakeScreenshot(500, 500);
 
     }
@@ -147,58 +149,60 @@ public class PoseManager : MonoBehaviour
 
     public void TakeSSFrame()
     {
-        Texture2D bottom = frame.sprite.texture;
-        Texture2D top = resultImage.sprite.texture;
+        Texture2D l_Bottom = m_BackGroundImage_Image.sprite.texture; // Background image
+        Texture2D l_Top = m_CapturedImage_Image.sprite.texture; // captured image of the character
 
-        Texture2D temptexture = new Texture2D(bottom.width, bottom.height);
-        temptexture.SetPixels(bottom.GetPixels());
-        temptexture.Apply();
+        Texture2D l_GeneratedTexture = new Texture2D(l_Bottom.width, l_Bottom.height);  // Creating a new texture of same width and height
+        l_GeneratedTexture.SetPixels(l_Bottom.GetPixels());
+        l_GeneratedTexture.Apply();
 
-        Vector3 PosDiff = -frame.GetComponent<RectTransform>().localPosition + resultImage.GetComponent<RectTransform>().localPosition;
+        Vector3 PosDiff = -m_BackGroundImage_Image.GetComponent<RectTransform>().localPosition + m_CapturedImage_Image.GetComponent<RectTransform>().localPosition;
+
+        // Taking the position difference of the background imaged and captured image
 
         if (PosDiff.x > 0)
         {
-            XBottomStart = (int)((PosDiff.x/ (Screen.width / 2))*500); 
-            XTopStart = 0;
+            m_XBottomStart = (int)((PosDiff.x/ (Screen.width / 2))*(Screen.width/2)); 
+            m_XTopStart = 0;
         }
         else
         {
-            XTopStart = (int)((Mathf.Abs(PosDiff.x) / (Screen.width / 2)) * 500);
-            XBottomStart = 0;
+            m_XTopStart = (int)((Mathf.Abs(PosDiff.x) / (Screen.width / 2)) * (Screen.width / 2));
+            m_XBottomStart = 0;
         }
 
         if (PosDiff.y > 0)
         {
-            YBottomStart = (int)((PosDiff.y / (Screen.width / 2)) * 500);
-            YTopStart = 0;
+            m_YBottomStart = (int)((PosDiff.y / (Screen.width / 2)) * (Screen.width / 2));
+            m_YTopStart = 0;
         }
         else 
         {
-            YTopStart = (int)((Mathf.Abs(PosDiff.y) / (Screen.width / 2)) * 500);
-            YBottomStart = 0;
+            m_YTopStart = (int)((Mathf.Abs(PosDiff.y) / (Screen.width / 2)) * (Screen.width / 2));
+            m_YBottomStart = 0;
         }
 
-        Color a = new Color();
+        Color l_PixelColor = new Color();
 
-        for (int x = 0; x < bottom.width; x++)
+        for (int x = 0; x < l_Bottom.width; x++)
         {
-            for (int y = 0; y < bottom.height; y++)
+            for (int y = 0; y < l_Bottom.height; y++)
             {
-                if((y + YTopStart) <= bottom.height)
-                 a = top.GetPixel(x+XTopStart, y+YTopStart);
+                if((y + m_YTopStart) <= l_Bottom.height)
+                    l_PixelColor = l_Top.GetPixel(x+m_XTopStart, y+m_YTopStart);
 
-                if ((y + YBottomStart) <= bottom.height)
-                    if (a.a > 0.5f)
-                    temptexture.SetPixel(x+XBottomStart, y+YBottomStart, a);
+                if ((y + m_YBottomStart) <= l_Bottom.height)
+                    if (l_PixelColor.a > 0.5f)
+                    l_GeneratedTexture.SetPixel(x+m_XBottomStart, y+m_YBottomStart, l_PixelColor);
             }
         }
 
 
-        temptexture.Apply();
+        l_GeneratedTexture.Apply();
 
-        Sprite sprite = Sprite.Create(temptexture, new Rect(0.0f, 0.0f, temptexture.width, temptexture.height), new Vector2(0.5f, 0.5f), 100.0f);
-        finalImage.sprite = sprite;
-        finalImage.gameObject.SetActive(true);
+        Sprite l_GeneratedSprite_Sprite = Sprite.Create(l_GeneratedTexture, new Rect(0.0f, 0.0f, l_GeneratedTexture.width, l_GeneratedTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
+        m_FinalImage_Image.sprite = l_GeneratedSprite_Sprite;
+        m_FinalImage_Image.gameObject.SetActive(true);
 
         m_FinalImage_Panel.SetActive(true);
     }
@@ -220,7 +224,5 @@ public class PoseManager : MonoBehaviour
 
         _characterDownloaded.SetActive(false);
         ssHandler.TakeScreenshot(200, 200);
-
     }
-
 }

@@ -11,85 +11,105 @@ public class ClothesCustomizer : MonoBehaviour
 
     public enum ClothType { Shirt, Pant, Shoes }
     [HideInInspector]
-    public ClothType clothTypes;
+    public ClothType m_ClothType;
 
-    public GameObject Shirt;
-    public GameObject Pant;
-    public GameObject Shoes;
+    [Header("Clothes")]
+    public GameObject m_Shirt;
+    public GameObject m_Pant;
+    public GameObject m_Shoes;
 
-    //[Header("Shirts")]
-    //public GameObject[] Shirts;
+    [Header("Cloth Meshes")]
+    public Mesh[] m_Shirts_Mesh;
+    public Mesh[] m_Pants_Mesh;
+    public Mesh[] m_Shoes_Mesh;
 
-    //[Header("Pants")]
-    //public GameObject[] Pants;
-
-    //[Header("Shoes")]
-    //public GameObject[] Shoes;
-
-    public Material[] m_Materials;
 
 
     private void Awake()
     {
-
-        Instance = this;
+        if (Instance == null)
+            Instance = this;
     }
 
     private void Start()
     {
-        LoadSavedClothes();
+       
     }
+
+
+
+    #region Change Clothe Meshes
 
     public void ApplyChangesToShirt(int MaterialIndex)
     {
-        Shirt.GetComponent<SkinnedMeshRenderer>().material = m_Materials[MaterialIndex];
-        SaveAppliedChanges(ClothType.Shirt, MaterialIndex);
-
+        //m_Shirt.GetComponent<SkinnedMeshRenderer>().material = m_Materials[MaterialIndex];
+        //SaveAppliedChanges(ClothType.Shirt, MaterialIndex);
     }
 
     public void ApplyChangesTopPant(int MaterialIndex)
     {
-        Pant.GetComponent<SkinnedMeshRenderer>().material = m_Materials[MaterialIndex];
-        SaveAppliedChanges(ClothType.Pant, MaterialIndex);
+        //m_Pant.GetComponent<SkinnedMeshRenderer>().material = m_Materials[MaterialIndex];
+        //SaveAppliedChanges(ClothType.Pant, MaterialIndex);
     }
 
     public void ApplyChangesToShoes(int MaterialIndex)
     {
-        Shoes.GetComponent<SkinnedMeshRenderer>().material = m_Materials[MaterialIndex];
-        SaveAppliedChanges(ClothType.Shoes, MaterialIndex);
+        //m_Shoes.GetComponent<SkinnedMeshRenderer>().material = m_Materials[MaterialIndex];
+        //SaveAppliedChanges(ClothType.Shoes, MaterialIndex);
     }
 
+    #endregion
 
+    #region Save And Load Changes
 
-    public void SaveAppliedChanges(ClothType clothTypes, int Index)
+    public void SaveAppliedChanges(ClothType l_ClothTypes, int l_MeshIndex)
     {
-        if (clothTypes == ClothType.Shirt)
+        if (l_ClothTypes == ClothType.Shirt)
         {
-            PlayerPrefs.SetInt("Shirt", Index);
+            m_AppliedShirtMeshIndex = l_MeshIndex;
         }
-        else if (clothTypes == ClothType.Pant)
+        else if (l_ClothTypes == ClothType.Pant)
         {
-            PlayerPrefs.SetInt("Pant", Index);
+            m_AppliedPantMeshIndex = l_MeshIndex;
         }
-        else if (clothTypes == ClothType.Shoes)
+        else if (l_ClothTypes == ClothType.Shoes)
         {
-            PlayerPrefs.SetInt("Shoes", Index);
+            m_AppliedShoesMeshIndex = l_MeshIndex;
         }
     }
 
     void LoadSavedClothes()
     {
-        int shirtindex = PlayerPrefs.GetInt("Shirt");
-        int pantindex = PlayerPrefs.GetInt("Pant");
-        int shoesindex = PlayerPrefs.GetInt("Shoes");
-
-        ApplyChangesToShirt(shirtindex);
-        ApplyChangesTopPant(pantindex);
-        ApplyChangesToShoes(shoesindex);
+        ApplyChangesToShirt(m_AppliedShirtMeshIndex);
+        ApplyChangesTopPant(m_AppliedPantMeshIndex);
+        ApplyChangesToShoes(m_AppliedShoesMeshIndex);
     }
 
+    #endregion
 
+    #region Properties 
 
+    int m_AppliedShirtMeshIndex
+    {
+        get { return PlayerPrefs.GetInt("AppliedShirtMeshIndex"); }
+        set { PlayerPrefs.SetInt("AppliedShirtMeshIndex", value); }
+    }
+
+    int m_AppliedPantMeshIndex
+    {
+        get { return PlayerPrefs.GetInt("AppliedPantMeshIndex"); }
+        set { PlayerPrefs.SetInt("AppliedPantMeshIndex", value); }
+    }
+
+    int m_AppliedShoesMeshIndex
+    {
+        get { return PlayerPrefs.GetInt("AppliedShoesMeshIndex"); }
+        set { PlayerPrefs.SetInt("AppliedShoesMeshIndex", value); }
+    }
+
+    #endregion
+
+    #region Waste Code
 
     public void ChangeShirt(int shirtIndex)
     {
@@ -127,4 +147,5 @@ public class ClothesCustomizer : MonoBehaviour
 
     }
 
+    #endregion
 }

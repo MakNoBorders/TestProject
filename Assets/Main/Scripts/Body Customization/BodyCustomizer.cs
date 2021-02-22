@@ -3,161 +3,182 @@ using UnityEngine;
 
 public class BodyCustomizer : MonoBehaviour
 {
-    // -- Variable Declaration 
-    // Public Var --- CharacterName
-    // Constant Var -- CHARACTER_NAME
-    // Private Var ----_characterName
-    // Inside Method Or Methdo Param -- characterName
-
     public static BodyCustomizer Instance;
 
-    public enum MorphType { Face, Body }
+    public enum MorphType { Face, Body }  // To Set The "BodyCustomizerTrigger" To Modify Either The Face Or Body
     [HideInInspector]
-    public MorphType MorphTypes;
+    public MorphType m_MorphType;
 
     [Header("Character Components")]
-    public GameObject Character;
-    public GameObject CharacterBody;
-    public GameObject CharacterFace;
+    public GameObject m_CharacterFace;
+    public GameObject m_CharacterBody;
 
-    public GameObject m_Shirt;
-    public GameObject m_Pant;
+    [Header("Body Meshes")]
+    public Mesh[] m_BodyMeshes;
 
     // ** Skin Mesh Renderer ** //
-    SkinnedMeshRenderer face_SkinMeshRenderer;
+    SkinnedMeshRenderer m_FaceSkinMeshRenderer;
+    SkinnedMeshRenderer m_BodySkinMeshRenderer;
 
     // ** Applied Morph Values ** //  if already a morph is applied
-    bool isMorphApplied;
-    int appliedMorphOneIndex;
-    int appliedMorphTwoIndex;
-    float appliedMorphToValue;
+    int m_AppliedMorphOneIndex;
+    int m_AppliedMorphTwoIndex;
 
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+            Instance = this;
     }
 
     void Start()
     {
-        face_SkinMeshRenderer = CharacterFace.GetComponent<SkinnedMeshRenderer>();
-
-        if (PlayerPrefs.GetInt("CustomFaceMorphApplied") == 1)
-        {
-            print("inside");
-           // CustomFaceMorph.Instance.LoadSaveMorphedValues();
-        }
-        else
-        {
-            LoadLastAppliedFaceMorph(); // load the last applied face morph at start
-        }
-
-        LoadLastAppliedBodyMorph();
-
-        //face_SkinMeshRenderer.SetBlendShapeWeight(0, 100);
+        Initialization();
     }
 
-    public void ModifyCharacter_Face(int morphIndex, int morphFrom, int morphTo, float morphTime, AnimationCurve animCurve)
+    #region Initilization
+
+    void Initialization()
     {
-        //if (appliedMorphIndex == morphIndex) return; // if last applied morph index is same as new one then return, e.g pressing the same morph button
-        ResetAllWeights();
-        // RemoveAnyExistingBlendShape(); // if any morph is applied before then reset its values, to apply the new one
-        SaveCurrentApplieBlendShape(morphFrom, morphTo); // save the applied morph
-        StopAllCoroutines();
-
-        //if(morphFrom!=-1)
-        StartCoroutine(FaceModificationAnimation(morphTime, morphIndex, morphFrom, morphTo, animCurve)); // Apply New Morph
-
-        // if (morphFrom != -1)
-        // StartCoroutine(FaceModificationAnimation(morphTime, morphIndex, morphFrom, morphTo, animCurve)); // Apply New Morph
+        m_AppliedMorphOneIndex = -1;
+        m_AppliedMorphTwoIndex = -1;
+        m_FaceSkinMeshRenderer = m_CharacterFace.GetComponent<SkinnedMeshRenderer>();
+        LoadLastAppliedFaceBlendShape();
     }
 
-    IEnumerator FaceModificationAnimation(float animateTime, int morphIndex, int morphFrom, int morphTo, AnimationCurve animCurve)
-    {
-        float t = 0;
-        while (t <= animateTime)
-        {
-            t += Time.fixedDeltaTime;
-            float blendWeight = Mathf.Lerp(0, 100, animCurve.Evaluate(t / animateTime));
-            if (morphFrom != -1)
-                face_SkinMeshRenderer.SetBlendShapeWeight(morphFrom, blendWeight);
+    #endregion
 
-            if (morphTo != -1)
-                face_SkinMeshRenderer.SetBlendShapeWeight(morphTo, blendWeight);
+    #region Apply Face Blend Shape
+
+    public void ModifyCharacter_Face (int l_IndexOne, int l_IndexTwo, float l_AnimateTime, AnimationCurve l_AnimCurve)
+    {
+        SaveCurrentApplieBlendShape(l_IndexOne, l_IndexTwo); 
+        StartCoroutine(FaceModificationAnimation(l_AnimateTime, l_IndexOne, l_IndexTwo, l_AnimCurve));
+    }
+
+    IEnumerator FaceModificationAnimation(float l_AnimateTime, int l_IndexOne, int l_IndexTwo, AnimationCurve l_AnimCurve)
+    {
+        float l_t = 0;
+        while (l_t <= l_AnimateTime)
+        {
+            l_t += Time.fixedDeltaTime;
+            float blendWeight = Mathf.Lerp(0, 100, l_AnimCurve.Evaluate(l_t / l_AnimateTime));
+
+            if (l_IndexOne != -1)
+                m_FaceSkinMeshRenderer.SetBlendShapeWeight(l_IndexOne, blendWeight);
+
+            if (l_IndexTwo != -1)
+                m_FaceSkinMeshRenderer.SetBlendShapeWeight(l_IndexTwo, blendWeight);
+
+            float l_ResetBlendWeight = Mathf.Lerp(100, 0, (l_t / l_AnimateTime));
+
+            if (m_AppliedMorphOneIndex != -1)
+                m_FaceSkinMeshRenderer.SetBlendShapeWeight(m_AppliedMorphOneIndex, l_ResetBlendWeight);  /// Reseting the last applied blendshape
+
+            if (m_AppliedMorphTwoIndex != -1)
+                m_FaceSkinMeshRenderer.SetBlendShapeWeight(m_AppliedMorphTwoIndex, l_ResetBlendWeight);
 
             yield return null;
         }
     }
 
-    public void RemoveAnyExistingBlendShape()
+    #endregion
+
+    #region Change Body Size, Save ,Load
+
+    public void ChangeBodySize(int l_BodyMeshIndex) // by applying meshes of different sizes
     {
-        //face_SkinMeshRenderer.SetBlendShapeWeight(appliedMorphIndex, 0);
+        m_BodySkinMeshRenderer.sharedMesh = m_BodyMeshes[l_BodyMeshIndex];
     }
+
+    void SaveAppliedBodyMeshIndex(int l_BodyMeshIndex)
+    {
+        m_AppliedBodyMeshIndex = l_BodyMeshIndex;
+    }
+
+    void LoadAppliedBodyMesh()
+    {
+        m_BodySkinMeshRenderer.sharedMesh = m_BodyMeshes[m_AppliedBodyMeshIndex];
+    }
+
+    #endregion
+
+    #region Save And Load Face Blend Shapes
 
     private void SaveCurrentApplieBlendShape(int l_one, int l_two)
     {
-        // destroy 
+        CustomFaceMorph.Instance.m_IsCustomBlendShapesApplied = false; // remove the custom applied morph to apply the new one
 
-        PlayerPrefs.SetInt("CustomFaceMorphApplied", 0);
-
-        //PlayerPrefs.SetInt("IsFaceMorphApplied", 1);
+        m_IsFaceBlendShapeApplied = true;
         PlayerPrefs.SetInt("FaceMorphIndexOne", l_one);
         PlayerPrefs.SetInt("FaceMorphIndexTwo", l_two);
 
-        //isMorphApplied = true;
-        //appliedMorphIndex = morphIndex;
-        //appliedMorphToValue = morphTo;
-
-        appliedMorphOneIndex = l_one;
-        appliedMorphTwoIndex = l_two;
+        m_AppliedMorphOneIndex = l_one;
+        m_AppliedMorphTwoIndex = l_two;
     }
 
-    void LoadLastAppliedFaceMorph()
+    void LoadLastAppliedFaceBlendShape()
     {
-        //isMorphApplied = PlayerPrefs.GetInt("IsFaceMorphApplied") == 1 ? true : false;
-        //appliedMorphIndex = PlayerPrefs.GetInt("AppliedFaceMorphIndex");
-        //appliedMorphToValue = PlayerPrefs.GetFloat("AppliedFaceMorphToValue");
+        if (!m_IsFaceBlendShapeApplied) return;
 
-        appliedMorphOneIndex = PlayerPrefs.GetInt("FaceMorphIndexOne");
-        appliedMorphTwoIndex = PlayerPrefs.GetInt("FaceMorphIndexTwo");
+        m_AppliedMorphOneIndex = PlayerPrefs.GetInt("FaceMorphIndexOne");
+        m_AppliedMorphTwoIndex = PlayerPrefs.GetInt("FaceMorphIndexTwo");
 
-        if (true)//isMorphApplied)
-        {
-            if (appliedMorphOneIndex != -1)
-                face_SkinMeshRenderer.SetBlendShapeWeight(appliedMorphOneIndex, 100);
+        if (m_AppliedMorphOneIndex != -1)
+            m_FaceSkinMeshRenderer.SetBlendShapeWeight(m_AppliedMorphOneIndex, 100);
 
-            if (appliedMorphTwoIndex != -1)
-                face_SkinMeshRenderer.SetBlendShapeWeight(appliedMorphTwoIndex, 100);
-        }
+        if (m_AppliedMorphTwoIndex != -1)
+            m_FaceSkinMeshRenderer.SetBlendShapeWeight(m_AppliedMorphTwoIndex, 100);
+
     }
-    
+
+    #endregion
+
+    #region Properties
+
+    bool m_IsFaceBlendShapeApplied
+    {
+        get { return PlayerPrefs.GetInt("FaceBlendShapeApplied") == 1 ? true : false; }
+        set { PlayerPrefs.SetInt("FaceBlendShapeApplied", value ? 1 : 0); }
+    }
+
+    int m_AppliedBodyMeshIndex
+    {
+        get { return PlayerPrefs.GetInt("AppliedBodyMeshIndex"); }
+        set { PlayerPrefs.SetInt("AppliedBodyMeshIndex", value); }
+    }
+
+    #endregion
+
+    #region Waste Code
+
+    public void ModifyCharacter_Body(float weight)
+    {
+        //m_Shirt.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, weight);
+        //m_Pant.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, weight);
+
+        //PlayerPrefs.SetInt("IsBodyMorphApplied", 1);
+        //PlayerPrefs.SetFloat("BodyMorph", weight);
+    }
+
     public void LoadLastAppliedBodyMorph()
     {
         if(PlayerPrefs.GetInt("IsBodyMorphApplied")==1)
         {
-            m_Shirt.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, PlayerPrefs.GetFloat("BodyMorph"));
-            m_Pant.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, PlayerPrefs.GetFloat("BodyMorph"));
+            //m_Shirt.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, PlayerPrefs.GetFloat("BodyMorph"));
+            //m_Pant.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, PlayerPrefs.GetFloat("BodyMorph"));
         }
     }
 
     void ResetAllWeights()
     {
-        int blends = face_SkinMeshRenderer.sharedMesh.blendShapeCount;
+        int blends = m_FaceSkinMeshRenderer.sharedMesh.blendShapeCount;
 
         for (int i = 0; i < blends; i++)
         {
-            face_SkinMeshRenderer.SetBlendShapeWeight(i, 0);
+            m_FaceSkinMeshRenderer.SetBlendShapeWeight(i, 0);
         }
     }
 
-
-
-    public void CustomizeBody(float weight)
-    {
-        m_Shirt.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, weight);
-        m_Pant.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, weight);
-
-        PlayerPrefs.SetInt("IsBodyMorphApplied", 1);
-        PlayerPrefs.SetFloat("BodyMorph", weight);
-    }
+    #endregion
 }
