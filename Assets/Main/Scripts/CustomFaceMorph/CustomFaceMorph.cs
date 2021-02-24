@@ -31,9 +31,13 @@ public class CustomFaceMorph : MonoBehaviour
     int m_MovementDirection;
     bool m_HorOrVer;
 
+    bool m_45DegreeMovement;
+
     // ** Is CustomMorph Panel Activated ** //
     [HideInInspector]
     public bool m_IsCustomMorphPanelActivated;
+
+    public bool m_TestMotion_Bool;
 
 
     private void Awake()
@@ -112,7 +116,7 @@ public class CustomFaceMorph : MonoBehaviour
 
     #region Select Morph Trigger, Update Position, Constraint, Apply Face Morph
 
-    public void SelectedFaceMorphTrigger(GameObject l_SelectedTrigger,GameObject l_AssociatedTrigger,float xmin,float xmax,float ymin,float ymax,int l_BlendShapeIndex,int l_MovementDirection,float l_MovementScaler,bool l_HorOrVer)//True For Horizontal And False For Vertical
+    public void SelectedFaceMorphTrigger(GameObject l_SelectedTrigger,GameObject l_AssociatedTrigger,float xmin,float xmax,float ymin,float ymax,int l_BlendShapeIndex,int l_MovementDirection,float l_MovementScaler,bool l_HorOrVer,bool l_45DegreeMovement)//True For Horizontal And False For Vertical
     {
         m_FaceMorphTriggerSelected = l_SelectedTrigger;
         m_AssociatedTrigger = l_AssociatedTrigger;
@@ -128,6 +132,7 @@ public class CustomFaceMorph : MonoBehaviour
         m_HorOrVer = l_HorOrVer;
 
         isMorphTriggerSelected = true;
+        m_45DegreeMovement = l_45DegreeMovement;
 
         m_XMorph_Slider.gameObject.SetActive(l_HorOrVer);
         m_YMorph_Slider.gameObject.SetActive(!l_HorOrVer);
@@ -154,10 +159,6 @@ public class CustomFaceMorph : MonoBehaviour
         }
     }
 
-    
-
-    
-
     public void ApplyFaceMorph() // Changing the FaceMorph Values With Sliders
     { 
         // ** Adjusting The BlendShapes
@@ -170,28 +171,42 @@ public class CustomFaceMorph : MonoBehaviour
 
         if (m_FaceMorphTriggerSelected == null) return;
 
-        //** Adjusting The Position Of The Trigger ,Sync with the slider 
+        //** Adjusting The Position Of The Trigger ,Sync with the slider ,, TRIGGER MOVEMENT
 
         Vector3 l_TriggerPosition = m_FaceMorphTriggerSelected.transform.position;
 
-        if (m_HorOrVer)
-        {
-            if (m_MovementDirection == -1)
-                m_FaceMorphTriggerSelected.transform.position = new Vector3(-(xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMax, l_TriggerPosition.y, l_TriggerPosition.z);
 
+        if (!m_45DegreeMovement)
+        {
+            if (m_HorOrVer)
+            {
+                if (m_MovementDirection == -1)
+                    m_FaceMorphTriggerSelected.transform.position = new Vector3(-(xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMax, l_TriggerPosition.y, l_TriggerPosition.z);
+
+                if (m_MovementDirection == 1)
+                    m_FaceMorphTriggerSelected.transform.position = new Vector3((xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMin, l_TriggerPosition.y, l_TriggerPosition.z);
+            }
+
+            if (!m_HorOrVer)
+            {
+                if (m_MovementDirection == -1)
+                    m_FaceMorphTriggerSelected.transform.position = new Vector3(l_TriggerPosition.x, -(yMax - yMin) * m_YMorph_Slider.value * 0.01f + yMax, l_TriggerPosition.z);
+
+                if (m_MovementDirection == 1)
+                    m_FaceMorphTriggerSelected.transform.position = new Vector3(l_TriggerPosition.x, (yMax - yMin) * m_YMorph_Slider.value * 0.01f + yMin, l_TriggerPosition.z);
+            }
+        }
+        else
+        {
             if (m_MovementDirection == 1)
-                m_FaceMorphTriggerSelected.transform.position = new Vector3((xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMin, l_TriggerPosition.y, l_TriggerPosition.z);
+                m_FaceMorphTriggerSelected.transform.position = new Vector3((xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMin, -(yMax - yMin) * m_XMorph_Slider.value * 0.01f + yMax, l_TriggerPosition.z);
+
+            if (m_MovementDirection == -1)
+                m_FaceMorphTriggerSelected.transform.position = new Vector3(-(xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMax, -(yMax - yMin) * m_XMorph_Slider.value * 0.01f + yMax, l_TriggerPosition.z);
+       
         }
 
-        if (!m_HorOrVer)
-        {
-            if (m_MovementDirection == -1)
-                m_FaceMorphTriggerSelected.transform.position = new Vector3(l_TriggerPosition.x, -(yMax - yMin) * m_YMorph_Slider.value * 0.01f + yMax, l_TriggerPosition.z);
 
-            if (m_MovementDirection == 1)
-                m_FaceMorphTriggerSelected.transform.position = new Vector3(l_TriggerPosition.x, (yMax - yMin) * m_YMorph_Slider.value * 0.01f + yMin, l_TriggerPosition.z);
-        }
-        
         //** If The Trigger Has Any Symetric Point Then Move It
 
         if (m_AssociatedTrigger != null)
@@ -203,13 +218,24 @@ public class CustomFaceMorph : MonoBehaviour
             l_YMin = m_AssociatedTrigger.GetComponent<CustomFaceMorphTrigger>().YMin;
             l_YMax = m_AssociatedTrigger.GetComponent<CustomFaceMorphTrigger>().YMax;
 
-            if (m_HorOrVer)
+            if(!m_45DegreeMovement)
             {
-                if (m_MovementDirection == 1)
-                    m_AssociatedTrigger.transform.position = new Vector3(-(l_XMax - l_XMin) * m_XMorph_Slider.value * 0.01f + l_XMax, m_AssociatedTrigger.transform.position.y, 3);
+                if (m_HorOrVer)
+                {
+                    if (m_MovementDirection == 1)
+                        m_AssociatedTrigger.transform.position = new Vector3(-(l_XMax - l_XMin) * m_XMorph_Slider.value * 0.01f + l_XMax, m_AssociatedTrigger.transform.position.y, 3);
 
+                    if (m_MovementDirection == -1)
+                        m_AssociatedTrigger.transform.position = new Vector3((l_XMax - l_XMin) * m_XMorph_Slider.value * 0.01f + l_XMin, m_AssociatedTrigger.transform.position.y, 3);
+                }
+            }
+            else
+            {
                 if (m_MovementDirection == -1)
-                    m_AssociatedTrigger.transform.position = new Vector3((l_XMax - l_XMin) * m_XMorph_Slider.value * 0.01f + l_XMin, m_AssociatedTrigger.transform.position.y, 3);
+                    m_AssociatedTrigger.transform.position = new Vector3((l_XMax - l_XMin) * m_XMorph_Slider.value * 0.01f + l_XMin, -(l_YMax - l_YMin) * m_XMorph_Slider.value * 0.01f + l_YMax, 3);
+
+                if (m_MovementDirection == 1)
+                    m_AssociatedTrigger.transform.position = new Vector3(-(l_XMax - l_XMin) * m_XMorph_Slider.value * 0.01f + l_XMax, -(l_YMax - l_YMin) * m_XMorph_Slider.value * 0.01f + l_YMax, 3);
             }
         }
     }

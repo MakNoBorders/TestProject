@@ -27,9 +27,12 @@ public class CustomFaceMorphTrigger : MonoBehaviour
     [Header("Mirror Point")]
     public GameObject m_MirrorPoint; // if we move any side face blend point, then its mirror on the other side of the face also moves relatively
 
+    [Header("45 Degree Movement")]
+    public bool m_45DegreeMovement;
+
     private void OnMouseDown()
     {
         GetComponent<SpriteRenderer>().color = CustomFaceMorph.Instance.m_ColorTwo;
-        CustomFaceMorph.Instance.SelectedFaceMorphTrigger(this.gameObject,m_MirrorPoint, XMin, XMax, YMin, YMax,m_BlendShapeIndex, m_MovementDirection, m_MovementScaler,m_HorOrVer);
+        CustomFaceMorph.Instance.SelectedFaceMorphTrigger(this.gameObject,m_MirrorPoint, XMin, XMax, YMin, YMax,m_BlendShapeIndex, m_MovementDirection, m_MovementScaler,m_HorOrVer,m_45DegreeMovement);
     }
 }
