@@ -67,7 +67,7 @@ public class CustomFaceMorph : MonoBehaviour
     {
         float l_XMin, l_XMax, l_YMin, l_YMax;
 
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < m_CustomBlendTriggers.Length; i++)
         {
             int l_Index = i;
             l_XMin = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().XMin;
@@ -90,6 +90,17 @@ public class CustomFaceMorph : MonoBehaviour
                         m_CustomBlendTriggers[l_Index].transform.position = new Vector3(-(l_XMax - l_XMin) * PlayerPrefs.GetFloat("CustomFaceMorph" + l_AssociatedBlendShape) * 0.01f + l_XMax, m_CustomBlendTriggers[l_Index].transform.position.y, 0);
 
                     m_XMorph_Slider.value = PlayerPrefs.GetFloat("CustomFaceMorph" + l_AssociatedBlendShape);
+                }
+
+                if(!l_HorOrVer)
+                {
+                    if (l_MovementDirection == 1)
+                        m_CustomBlendTriggers[l_Index].transform.position = new Vector3(m_CustomBlendTriggers[l_Index].transform.position.x,(l_YMax - l_YMin) * PlayerPrefs.GetFloat("CustomFaceMorph" + l_AssociatedBlendShape) * 0.01f + l_YMin, 0);
+
+                    if (l_MovementDirection == -1)
+                        m_CustomBlendTriggers[l_Index].transform.position = new Vector3(m_CustomBlendTriggers[l_Index].transform.position.x ,- (l_YMax - l_YMin) * PlayerPrefs.GetFloat("CustomFaceMorph" + l_AssociatedBlendShape) * 0.01f + l_YMax, 0);
+
+                    m_YMorph_Slider.value = PlayerPrefs.GetFloat("CustomFaceMorph" + l_AssociatedBlendShape);
                 }
             }
         }

@@ -3802,7 +3802,7 @@ Transform:
   m_LocalScale: {x: 0.007999999, y: 0.007999999, z: 1}
   m_Children: []
   m_Father: {fileID: 937330118}
-  m_RootOrder: 11
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &136826016
 CircleCollider2D:
@@ -5032,7 +5032,7 @@ Transform:
   m_LocalScale: {x: 0.007999999, y: 0.007999999, z: 1}
   m_Children: []
   m_Father: {fileID: 937330118}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &214219333
 CircleCollider2D:
@@ -7010,7 +7010,7 @@ Transform:
   m_LocalScale: {x: 0.007999999, y: 0.007999999, z: 1}
   m_Children: []
   m_Father: {fileID: 937330118}
-  m_RootOrder: 12
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &293872686
 CircleCollider2D:
@@ -13318,7 +13318,7 @@ Transform:
   m_LocalScale: {x: 0.008, y: 0.008, z: 1}
   m_Children: []
   m_Father: {fileID: 937330118}
-  m_RootOrder: 10
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &614987735
 CircleCollider2D:
@@ -18663,7 +18663,7 @@ Transform:
   m_LocalScale: {x: 0.008, y: 0.008, z: 1}
   m_Children: []
   m_Father: {fileID: 937330118}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &831558858
 CircleCollider2D:
@@ -21694,7 +21694,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &937330118
 Transform:
   m_ObjectHideFlags: 0
@@ -21710,6 +21710,8 @@ Transform:
   - {fileID: 129478036}
   - {fileID: 997726261}
   - {fileID: 2081290526}
+  - {fileID: 136826015}
+  - {fileID: 293872685}
   - {fileID: 1485803158}
   - {fileID: 214219332}
   - {fileID: 831558857}
@@ -21717,8 +21719,6 @@ Transform:
   - {fileID: 1254714467}
   - {fileID: 2067471415}
   - {fileID: 614987734}
-  - {fileID: 136826015}
-  - {fileID: 293872685}
   m_Father: {fileID: 316205649}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -23017,7 +23017,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &997726261
 Transform:
   m_ObjectHideFlags: 0
@@ -29473,7 +29473,7 @@ Transform:
   m_LocalScale: {x: 0.008, y: 0.008, z: 1}
   m_Children: []
   m_Father: {fileID: 937330118}
-  m_RootOrder: 8
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &1254714468
 CircleCollider2D:
@@ -30904,7 +30904,7 @@ Transform:
   m_LocalScale: {x: 0.008, y: 0.008, z: 1}
   m_Children: []
   m_Father: {fileID: 937330118}
-  m_RootOrder: 7
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &1325039544
 CircleCollider2D:
@@ -33925,7 +33925,7 @@ Transform:
   m_LocalScale: {x: 0.007999999, y: 0.007999999, z: 1}
   m_Children: []
   m_Father: {fileID: 937330118}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &1485803159
 CircleCollider2D:
@@ -35031,10 +35031,12 @@ MonoBehaviour:
   m_CustomBlendTriggers:
   - {fileID: 129478035}
   - {fileID: 1643654627}
+  - {fileID: 136826014}
+  - {fileID: 293872684}
+  - {fileID: 997726260}
+  - {fileID: 2081290525}
   m_AssociatedTrigger: {fileID: 0}
   m_IsCustomMorphPanelActivated: 0
-  m_SpriteToSpawn: {fileID: 0}
-  m_OffSet: {x: 0, y: 1.8, z: 0}
 --- !u!4 &1563605343
 Transform:
   m_ObjectHideFlags: 0
@@ -41236,7 +41238,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.699951, y: 85}
+  m_AnchoredPosition: {x: 8.699982, y: 85}
   m_SizeDelta: {x: 50, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1802733134
@@ -47199,7 +47201,7 @@ Transform:
   m_LocalScale: {x: 0.008, y: 0.008, z: 1}
   m_Children: []
   m_Father: {fileID: 937330118}
-  m_RootOrder: 9
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &2067471416
 CircleCollider2D:
@@ -47425,7 +47427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2081290526
 Transform:
   m_ObjectHideFlags: 0
