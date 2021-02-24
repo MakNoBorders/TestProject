@@ -30,7 +30,6 @@ public class CustomFaceMorph : MonoBehaviour
     int m_BlendShapeIndex;
     int m_MovementDirection;
     bool m_HorOrVer;
-
     bool m_45DegreeMovement;
 
     // ** Is CustomMorph Panel Activated ** //
@@ -114,7 +113,7 @@ public class CustomFaceMorph : MonoBehaviour
 
     //** When we select a trigger on the custom morph panel, then is it initialize in this class, and its movemnet is also controlled by this class
 
-    #region Select Morph Trigger, Update Position, Constraint, Apply Face Morph
+    #region Select Morph Trigger, Update Trigger Slider Value
 
     public void SelectedFaceMorphTrigger(GameObject l_SelectedTrigger,GameObject l_AssociatedTrigger,float xmin,float xmax,float ymin,float ymax,int l_BlendShapeIndex,int l_MovementDirection,float l_MovementScaler,bool l_HorOrVer,bool l_45DegreeMovement)//True For Horizontal And False For Vertical
     {
@@ -159,6 +158,10 @@ public class CustomFaceMorph : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Apply Face Blend Shape, Selected Trigger Movement, Associated Trigger Movement
+
     public void ApplyFaceMorph() // Changing the FaceMorph Values With Sliders
     { 
         // ** Adjusting The BlendShapes
@@ -171,12 +174,17 @@ public class CustomFaceMorph : MonoBehaviour
 
         if (m_FaceMorphTriggerSelected == null) return;
 
+        SelectedTriggerMovement();
+        AssociatedTriggerMovement();
+    }
+
+    void SelectedTriggerMovement()
+    {
         //** Adjusting The Position Of The Trigger ,Sync with the slider ,, TRIGGER MOVEMENT
 
         Vector3 l_TriggerPosition = m_FaceMorphTriggerSelected.transform.position;
 
-
-        if (!m_45DegreeMovement)
+        if (!m_45DegreeMovement) // There are triggers which will move in both direction ,, like motion at 45 degree in a straight line.
         {
             if (m_HorOrVer)
             {
@@ -198,16 +206,19 @@ public class CustomFaceMorph : MonoBehaviour
         }
         else
         {
+            // In 45 degree movemnt triggres, their both values X and Y will change at the same time, to move the trigger at an angle
             if (m_MovementDirection == 1)
                 m_FaceMorphTriggerSelected.transform.position = new Vector3((xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMin, -(yMax - yMin) * m_XMorph_Slider.value * 0.01f + yMax, l_TriggerPosition.z);
 
             if (m_MovementDirection == -1)
                 m_FaceMorphTriggerSelected.transform.position = new Vector3(-(xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMax, -(yMax - yMin) * m_XMorph_Slider.value * 0.01f + yMax, l_TriggerPosition.z);
-       
         }
+    }
 
-
-        //** If The Trigger Has Any Symetric Point Then Move It
+    void AssociatedTriggerMovement()
+    {
+        //** when we one point then the other point on the other side of the face will also move , if the other point is the associated point.
+        //** some point dont have associated points, a point on chin and one on forehead
 
         if (m_AssociatedTrigger != null)
         {
@@ -218,7 +229,7 @@ public class CustomFaceMorph : MonoBehaviour
             l_YMin = m_AssociatedTrigger.GetComponent<CustomFaceMorphTrigger>().YMin;
             l_YMax = m_AssociatedTrigger.GetComponent<CustomFaceMorphTrigger>().YMax;
 
-            if(!m_45DegreeMovement)
+            if (!m_45DegreeMovement)
             {
                 if (m_HorOrVer)
                 {

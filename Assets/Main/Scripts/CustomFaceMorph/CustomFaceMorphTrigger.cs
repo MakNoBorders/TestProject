@@ -6,15 +6,10 @@ public class CustomFaceMorphTrigger : MonoBehaviour
 {
     [Header("Hor/Ver Face Morph Slider Indexes")]
     public int m_BlendShapeIndex;
-    //public int VerMorphIndex;
-
     public int m_MovementDirection;
+    public bool m_HorOrVer;  // Either the Trigger will move on Horizontal or Vertical
 
-    public bool m_HorOrVer;
-    //public int verdir;
-    //public int hordir;
-
-    [Header("Movement Constraints")]
+    [Header("Movement Constraints")] // Movement region of the trigger 
     public float XMin;
     public float XMax;
     public float YMin;
@@ -23,9 +18,8 @@ public class CustomFaceMorphTrigger : MonoBehaviour
     [Header("Movement Scaler")]
     public float m_MovementScaler;
 
-
     [Header("Mirror Point")]
-    public GameObject m_MirrorPoint; // if we move any side face blend point, then its mirror on the other side of the face also moves relatively
+    public GameObject m_MirrorPoint; // In Zepeto if we move one point on face then, another point on the other side of the face will also move
 
     [Header("45 Degree Movement")]
     public bool m_45DegreeMovement;
