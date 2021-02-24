@@ -8,6 +8,6 @@
     public static readonly string VIDEOPATH = "Video Path";
     public static readonly string AUTH_TOKEN = "Auth Token";
     public static readonly string DEFAULT_TOKEN = "piyush55";
-
+    public static readonly string UPLOADVIDEOPATH="upload Video";
 }
 

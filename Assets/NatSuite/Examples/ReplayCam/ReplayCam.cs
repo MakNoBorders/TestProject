@@ -21,26 +21,43 @@ namespace NatSuite.Examples {
         public int videoWidth = 1280;
         public int videoHeight = 720;
         public bool recordMicrophone;
+        public GameObject CanvasObject;
        // public Text pathText;
 
         private IMediaRecorder recorder;
         private CameraInput cameraInput;
         private AudioInput audioInput;
-        public GameObject microphoneSource;
-       // public Button startBtn;
-       // public Button stopBtn;
+        public  GameObject microphoneSource;
+        public static bool stopSave=false;
+
+        // public Button startBtn;
+        // public Button stopBtn;
         private IEnumerator Start () {
+
+
             // Start microphone
             microphoneSource.AddComponent<AudioSource>();
-            microphoneSource.AddComponent<AudioListener>();
+            microphoneSource.GetComponent<AudioSource>().mute = true;
+            //microphoneSource.AddComponent<AudioListener>();
             microphoneSource.GetComponent<AudioSource>().loop = true;
-            microphoneSource.GetComponent<AudioSource>().mute = false;
-            microphoneSource.GetComponent<AudioSource>().bypassEffects =
+          microphoneSource.GetComponent<AudioSource>().bypassEffects =
              microphoneSource.GetComponent<AudioSource>().bypassListenerEffects = false;
-            // microphoneSource.clip = Microphone.Start(null, true, 10, AudioSettings.outputSampleRate);
+            // microphoneSource.GetComponent<AudioSource>().clip = Microphone.Start(null, true, 10, AudioSettings.outputSampleRate);
             microphoneSource.GetComponent<AudioSource>().clip = AB.clipAudio;
-            yield return new WaitUntil(() => Microphone.GetPosition(null) > 0);
             microphoneSource.GetComponent<AudioSource>().Play();
+            yield return new WaitUntil(() => Microphone.GetPosition(null) > 0);
+            
+
+            //microphoneSource = gameObject.AddComponent<AudioSource>();
+            //microphoneSource.mute = false;
+            //microphoneSource.loop = true;
+            //microphoneSource.bypassEffects =
+            //microphoneSource.bypassListenerEffects = false;
+            //// microphoneSource.clip = Microphone.Start(null, true, 10, AudioSettings.outputSampleRate);
+            //microphoneSource.clip = AB.clipAudio;
+            //yield return new WaitUntil(() => Microphone.GetPosition(null) > 0);
+            //microphoneSource.Play();
+
 
         }
 
@@ -51,7 +68,16 @@ namespace NatSuite.Examples {
         }
 
         public void StartRecording () {
-            microphoneSource.GetComponent<AudioSource>().Play();
+           
+            //microphoneSource.GetComponent<AudioSource>().mute = true;
+            //StartCoroutine(Start());
+            // audioInput?.Dispose();
+            //  cameraInput.Dispose();
+            PlayerPrefs.SetString(ConstantsGod.UPLOADVIDEOPATH, "");
+            PlayerPrefs.SetString(ConstantsGod.VIDEOPATH, "");
+            videoHeight = (int)CanvasObject.GetComponent<Canvas>().GetComponent<RectTransform>().rect.height;
+            videoWidth = (int)CanvasObject.GetComponent<Canvas>().GetComponent<RectTransform>().rect.width;
+            // microphoneSource.GetComponent<AudioSource>().Play();
             //startBtn.interactable = false;
             //stopBtn.interactable = true;
             // Start recording
@@ -64,13 +90,14 @@ namespace NatSuite.Examples {
             cameraInput = new CameraInput(recorder, clock, Camera.main);
             audioInput = recordMicrophone ? new AudioInput(recorder, clock, microphoneSource.GetComponent<AudioSource>(), true) : null;
             // Unmute microphone
-            //microphoneSource.GetComponent<AudioSource>().mute = audioInput == null;
+            microphoneSource.GetComponent<AudioSource>().mute = audioInput == null;
         }
 
         public async void StopRecording () {
             
             audioInput?.Dispose();
             cameraInput.Dispose();
+           // microphoneSource.GetComponent<AudioSource>().mute = true;
             var path = await recorder.FinishWriting();
             // Playback recording
             Debug.Log($"Saved recording to: {path}");
@@ -79,8 +106,26 @@ namespace NatSuite.Examples {
            // pathText.text = path.ToString();
            //StartCoroutine(copyPath(path));
 
+         //    Handheld.PlayFullScreenMovie($"file://{path}");
+        }
+
+        public async void StopRecordingForSave()
+        {
+            stopSave = true;
+
+            audioInput?.Dispose();
+            cameraInput.Dispose();
+            var path = await recorder.FinishWriting();
+            // Playback recording
+            Debug.Log($"Uploading recording to: {path}");
+            string filename = Path.GetFileName(path);
+            PlayerPrefs.SetString(ConstantsGod.UPLOADVIDEOPATH, filename);
+            // pathText.text = path.ToString();
+            //StartCoroutine(copyPath(path));
+
             // Handheld.PlayFullScreenMovie($"file://{path}");
         }
+
         public async void ShareVideo()
         {
             var mes = "";

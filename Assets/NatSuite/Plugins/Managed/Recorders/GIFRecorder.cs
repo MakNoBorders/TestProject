@@ -27,6 +27,7 @@ namespace NatSuite.Recorders {
         /// <param name="height">Image height.</param>
         /// <param name="frameDuration">Frame duration in seconds.</param>
         public GIFRecorder (int width, int height, float frameDuration) => this.recorder = new NativeRecorder((callback, context) => Bridge.CreateGIFRecorder(width, height, frameDuration, Utility.GetPath(@".gif"), callback, context));
+       // public GIFRecorderSave (int width, int height, float frameDuration) => this.recorder = new NativeRecorder((callback, context) => Bridge.CreateGIFRecorder(width, height, frameDuration, Utility.GetSavePath(@".gif"), callback, context));
 
         /// <summary>
         /// Commit a video pixel buffer for encoding.

@@ -1,0 +1,30 @@
+ManifestFileVersion: 0
+CRC: 2025034663
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 314e0168905614b52cfad706c5cb79dd
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: a14e8fe904c231a50494eb524187b5fa
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+Assets:
+- Assets/Models/NewModelPrefab/Animation.prefab
+Dependencies: []

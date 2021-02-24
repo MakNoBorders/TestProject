@@ -77,6 +77,7 @@ public class PoseManager : MonoBehaviour
             objects.SetActive(true);
         }
         toEnable[4].gameObject.SetActive(false);
+        toEnable[5].gameObject.SetActive(false);
         StartCoroutine(DownloadAssetBundle(url));
     }
 

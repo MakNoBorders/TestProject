@@ -19,6 +19,7 @@ public class AB : MonoBehaviour
     bool single = true;
     public GameObject currentAvatar;
     public static AudioClip clipAudio;
+    public static AudioSource BundleAudio;
     public GameObject classObject;
     public GameObject loadingPenal;
     public GameObject ScriptComponent;
@@ -38,6 +39,14 @@ public class AB : MonoBehaviour
     public GameObject VideoPenal;
     public GameObject PoseAnimationPenal;
     private bool updateValue=false;
+    public GameObject CanvasObject;
+    private Texture texture1;
+    public GameObject SavePenal;
+   public AudioSource CameraObject;
+    public GameObject  closeBtn;
+    public GameObject backgroundBtn;
+    public static bool SaveBtnClick=false;
+    public string animName;
 
     private void Start()
     {
@@ -143,7 +152,7 @@ public class AB : MonoBehaviour
                 Debug.LogError("Response UserDetails Data" + uwr.downloadHandler.text.ToString().Trim());
                 updateValue = true;
             }
-            catch (Exception e)
+            catch (Exception )
             {
 
             }
@@ -159,7 +168,8 @@ public class AB : MonoBehaviour
             {
                 objects.SetActive(false);
             }
-            toClose[4].gameObject.SetActive(true);
+            
+
             StartCoroutine(GetAssetBundleFromServerUrl(url));
 
 
@@ -197,18 +207,40 @@ public class AB : MonoBehaviour
                         Debug.LogError(go.name);
                         if (go.name.Equals("Animation"))
                         {
+                           // ScriptComponent.GetComponent<ReplayCam>().microphoneSource.GetComponent<AudioSource>().mute = true;
+                            CanvasObject.transform.GetChild(0).GetComponent<RawImage>().texture = null;
+                            //toClose[5].GetComponent<Button>().interactable = false;
+                            toClose[4].gameObject.SetActive(true);
+                            toClose[5].gameObject.SetActive(true);
+                            CanvasObject.SetActive(true);
                             loadingPenal.SetActive(false);
                             main = go.transform.gameObject;
+                            //main = Instantiate(go);
                             //currentAvatar.SetActive(true);
                             animator = main.transform.GetComponent<Animator>().runtimeAnimatorController;
+                          
                             clipAudio = main.transform.GetChild(0).GetComponent<AudioSource>().clip;
+                           // ReplayCam.microphoneSource = main.transform.GetChild(0).GetComponent<AudioSource>();
+                            //main.transform.GetChild(0).GetComponent<AudioSource>().Play();
                             classObject.transform.GetComponent<AudioSource>().clip = clipAudio;
                             classObject.transform.GetComponent<AudioSource>().Play();
+                            CameraObject.clip = clipAudio;
+                           // CameraObject.mute = true;
+                            CameraObject.Play();
+                            //AudioSource.PlayClipAtPoint(clipAudio, transform.position);
+                            Vector3 temp = new Vector3(0f, -1.94f, 3.43f);
+                          
+                            currentAvatar.transform.position = temp;
                             currentAvatar.GetComponent<Animator>().runtimeAnimatorController = animator;
+                           string animationname=currentAvatar.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).ToString();
+                            Debug.Log("anim name==="+animationname);
+                            //animator.Play("your animation name", -1, 0f);
                             ScriptComponent.GetComponent<ReplayCam>().StartRecording();
+                            ReplayCam.stopSave = false;
                             RuntimeAnimatorController ac = currentAvatar.GetComponent<Animator>().runtimeAnimatorController;
                             float time = ac.animationClips[0].length;
-                            StartCoroutine(stopClip(time));
+                            StartCoroutine(stopClipForUpload(time));
+
                         }
                     }
                     GetAllCameras();
@@ -220,11 +252,182 @@ public class AB : MonoBehaviour
 
         }
     }
+
+    public void VideoIndex(int index)
+    {
+        if (index == 0)
+        {
+            animName = "breakdance";
+        }
+        else if (index==1)
+        {
+            animName = "sitting";
+        }
+        else if (index == 2)
+        {
+            animName = "waving";
+        }
+    }
+    public void bgChange(int index)
+    {
+        texture1 = null;
+        if (CanvasObject.activeSelf)
+        {
+
+            if (index == 0)
+            {
+                ScriptComponent.GetComponent<ReplayCam>().microphoneSource.GetComponent<AudioSource>().mute = true;
+                if (!ReplayCam.stopSave)
+                {
+                    CameraObject.Stop();
+                    ScriptComponent.GetComponent<ReplayCam>().StopRecordingForSave();
+                }
+                if (Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
+                {
+                    Directory.Delete(Application.persistentDataPath + "/UploadVideo",true);
+                }
+                SaveBtnClick = false;
+                DoneBtn.GetComponent<Button>().interactable = false;
+                StopAllCoroutines();
+                CameraObject.clip = clipAudio;
+               // CameraObject.mute = true;
+                CameraObject.Play();
+                toClose[5].GetComponent<Button>().interactable = true;
+                texture1 = rawText1.GetComponent<RawImage>().texture;
+                CanvasObject.transform.GetChild(0).GetComponent<RawImage>().texture = texture1;
+                currentAvatar.GetComponent<Animator>().Play(animName, -1, 0f);
+                ScriptComponent.GetComponent<ReplayCam>().StartRecording();
+                ReplayCam.stopSave = false;
+                RuntimeAnimatorController ac = currentAvatar.GetComponent<Animator>().runtimeAnimatorController;
+                float time = ac.animationClips[0].length;
+                StartCoroutine(stopClipForUpload(time));
+            }
+            else if (index == 1)
+            {
+                ScriptComponent.GetComponent<ReplayCam>().microphoneSource.GetComponent<AudioSource>().mute = true;
+                if (!ReplayCam.stopSave)
+                {
+                    CameraObject.Stop();
+                    ScriptComponent.GetComponent<ReplayCam>().StopRecordingForSave();
+                }
+                if (Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
+                {
+                    Directory.Delete(Application.persistentDataPath + "/UploadVideo", true);
+                }
+                SaveBtnClick = false;
+                DoneBtn.GetComponent<Button>().interactable = false;
+                StopAllCoroutines();
+               CameraObject.clip = clipAudio;
+                //CameraObject.mute = true;
+                CameraObject.Play();
+                toClose[5].GetComponent<Button>().interactable = true;
+                texture1 = rawText2.GetComponent<RawImage>().texture;
+                CanvasObject.transform.GetChild(0).GetComponent<RawImage>().texture = texture1;
+                currentAvatar.GetComponent<Animator>().Play(animName, -1, 0f);
+                ScriptComponent.GetComponent<ReplayCam>().StartRecording();
+                ReplayCam.stopSave = false;
+                RuntimeAnimatorController ac = currentAvatar.GetComponent<Animator>().runtimeAnimatorController;
+                float time = ac.animationClips[0].length;
+                StartCoroutine(stopClipForUpload(time));
+            }
+            else if (index == 2)
+            {
+                ScriptComponent.GetComponent<ReplayCam>().microphoneSource.GetComponent<AudioSource>().mute = true;
+                if (!ReplayCam.stopSave)
+                {
+                    CameraObject.Stop();
+                    ScriptComponent.GetComponent<ReplayCam>().StopRecordingForSave();
+                }
+                if (Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
+                {
+                    Directory.Delete(Application.persistentDataPath + "/UploadVideo", true);
+                }
+                SaveBtnClick = false;
+                DoneBtn.GetComponent<Button>().interactable = false;
+                StopAllCoroutines();
+                CameraObject.clip = clipAudio;
+                //CameraObject.mute = true;
+                CameraObject.Play();
+                toClose[5].GetComponent<Button>().interactable = true;
+                texture1 = rawText3.GetComponent<RawImage>().texture;
+                CanvasObject.transform.GetChild(0).GetComponent<RawImage>().texture = texture1;
+                currentAvatar.GetComponent<Animator>().Play(animName, -1, 0f);
+                ScriptComponent.GetComponent<ReplayCam>().StartRecording();
+                ReplayCam.stopSave = false;
+                RuntimeAnimatorController ac = currentAvatar.GetComponent<Animator>().runtimeAnimatorController;
+                float time = ac.animationClips[0].length;
+                StartCoroutine(stopClipForUpload(time));
+            }
+        }
+    }
+    public void uploadVideoPenal()
+    {
+
+    }
+
+    public void saveVideo()
+    {
+        if (!ReplayCam.stopSave)
+        {
+            ScriptComponent.GetComponent<ReplayCam>().StopRecordingForSave();
+        }
+        
+        //ReplayCam.audioInput?.Dispose();
+        StopAllCoroutines();
+        SaveBtnClick = true;
+        closeBtn.SetActive(false);
+        toClose[5].SetActive(false);
+        backgroundBtn.SetActive(false);
+        DoneBtn.SetActive(false);
+        SavePenal.SetActive(true);
+        currentAvatar.GetComponent<Animator>().Play(animName, -1, 0f);
+        ScriptComponent.GetComponent<ReplayCam>().StartRecording();
+        RuntimeAnimatorController ac = currentAvatar.GetComponent<Animator>().runtimeAnimatorController;
+        float time = ac.animationClips[0].length;
+        StartCoroutine(stopClip(time));
+    }
+
+    IEnumerator stopClipForUpload(float count)
+    {
+        yield return new WaitForSeconds(count);
+        ScriptComponent.GetComponent<ReplayCam>().StopRecordingForSave();
+        DoneBtn.GetComponent<Button>().interactable = true;
+    }
+
     IEnumerator stopClip(float count)
     {
         yield return new WaitForSeconds(count);
         ScriptComponent.GetComponent<ReplayCam>().StopRecording();
-        DoneBtn.GetComponent<Button>().interactable = true;
+        //SavePenal.SetActive(false);
+        //toClose[5].GetComponent<Button>().interactable = false;
+
+        closeBtn.SetActive(true);
+        toClose[5].SetActive(true);
+        backgroundBtn.SetActive(true);
+        DoneBtn.SetActive(true);
+        DoneBtn.GetComponent<Button>().interactable=true;
+        SavePenal.SetActive(false);
+        toClose[5].GetComponent<Button>().interactable = false;
+
+        if (Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
+        {
+            Directory.Delete(Application.persistentDataPath + "/UploadVideo", true);
+            currentAvatar.GetComponent<Animator>().Play(animName, -1, 0f);
+            ScriptComponent.GetComponent<ReplayCam>().StartRecording();
+            RuntimeAnimatorController ac = currentAvatar.GetComponent<Animator>().runtimeAnimatorController;
+            float time = ac.animationClips[0].length;
+            StartCoroutine(stopClipForUpload(time));
+        }
+        else
+        {
+            currentAvatar.GetComponent<Animator>().Play(animName, -1, 0f);
+            ScriptComponent.GetComponent<ReplayCam>().StartRecording();
+            RuntimeAnimatorController ac = currentAvatar.GetComponent<Animator>().runtimeAnimatorController;
+            float time = ac.animationClips[0].length;
+            StartCoroutine(stopClipForUpload(time));
+        }
+
+
     }
     void GetAllCameras()
     {
@@ -252,29 +455,42 @@ public class AB : MonoBehaviour
 
     public void resetAll()
     {
+        StopAllCoroutines();
+        currentAvatar.GetComponent<Animator>().Play(animName, -1, 0f);
+        UploadingPenal.SetActive(true);
+        closeBtn.SetActive(false);
+        backgroundBtn.SetActive(false);
+        DoneBtn.SetActive(false);
+        toClose[5].SetActive(false);
         TakeScreenshot(500, 500);
-
-        // NextButton.SetActive(false);
-        //animPenal.SetActive(true);
-        //bottomPenal.SetActive(false);
-        // rightPenal.SetActive(false);
-        //  BackButton.SetActive(false);
-        //currentAvatar.SetActive(false);
-        // bgPenal.SetActive(false);
     }
 
     public void closeScreen()
     {
+        ScriptComponent.GetComponent<ReplayCam>().microphoneSource.GetComponent<AudioSource>().Stop();
+        CameraObject.Stop();
+        if (Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
+        {
+            Directory.Delete(Application.persistentDataPath + "/UploadVideo", true);
+        }
+        Vector3 temp = new Vector3(0f, -1.39f, 3.43f);
+        currentAvatar.transform.position = temp;
+        StopAllCoroutines();
+        if (Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
+        {
+            Directory.Delete(Application.persistentDataPath + "/UploadVideo", true);
+        }
+        CanvasObject.SetActive(false);
         DoneBtn.GetComponent<Button>().interactable = false;
         VideoPenal.SetActive(true);
         PoseAnimationPenal.SetActive(false);
         PoseAnimationPenal.GetComponent<Image>().enabled = true;
         Debug.Log("Call");
         UploadingPenal.SetActive(false);
-        StopAllCoroutines();
-        ScriptComponent.GetComponent<ReplayCam>().microphoneSource.GetComponent<AudioSource>().Stop();
 
-        //Destroy(main.gameObject);
+       
+
+       // Destroy(main.gameObject);
         sceneCamera.gameObject.SetActive(true);
         renderCamera.gameObject.SetActive(true);
         single = true;
@@ -406,6 +622,8 @@ public class AB : MonoBehaviour
             }
 
             File.WriteAllBytes(Application.persistentDataPath + "/DownloadVideo/"+ Path.GetFileName(url), www.downloadHandler.data);
+
+           StopAllCoroutines();
         }
     }
 
@@ -421,17 +639,18 @@ public class AB : MonoBehaviour
         }
         else
         {
-            if (!string.IsNullOrEmpty(PlayerPrefs.GetString(ConstantsGod.VIDEOPATH))/*textureImageThumbnail != null || isPC*/)
+            if (!string.IsNullOrEmpty(PlayerPrefs.GetString(ConstantsGod.UPLOADVIDEOPATH))/*textureImageThumbnail != null || isPC*/)
             {
+                Debug.LogError("Value of==="+ PlayerPrefs.GetString(ConstantsGod.UPLOADVIDEOPATH));
                 WWWForm form = new WWWForm();
 
-                byte[] videoData = File.ReadAllBytes(Application.persistentDataPath+"/"+PlayerPrefs.GetString(ConstantsGod.VIDEOPATH));/*VideoPathString*/
-                form.AddBinaryData("post_file", videoData, PlayerPrefs.GetString(ConstantsGod.VIDEOPATH), "video/mp4");
+                byte[] videoData = File.ReadAllBytes(Application.persistentDataPath+ "/UploadVideo/" + PlayerPrefs.GetString(ConstantsGod.UPLOADVIDEOPATH));/*VideoPathString*/
+                form.AddBinaryData("post_file", videoData, PlayerPrefs.GetString(ConstantsGod.UPLOADVIDEOPATH), "video/mp4");
 
                 using (UnityWebRequest www = UnityWebRequest.Post(ConstantsGod.UPLOADVIDEO, form))
                 {
                     www.SetRequestHeader("Authorization", "JWT "+ PlayerPrefs.GetString(ConstantsGod.AUTH_TOKEN));
-                    www.SetRequestHeader("post_name", PlayerPrefs.GetString(ConstantsGod.VIDEOPATH));
+                    www.SetRequestHeader("post_name", PlayerPrefs.GetString(ConstantsGod.UPLOADVIDEOPATH));
                     www.SetRequestHeader("token",ConstantsGod.DEFAULT_TOKEN);
                     www.SetRequestHeader("update", "true");
                     Debug.LogError("update value==="+ updateValue.ToString());
@@ -450,41 +669,185 @@ public class AB : MonoBehaviour
 
                         yield return null;
                     }
-                   
+
                     //Debug.Log("VideoPath==="+ Application.persistentDataPath + "/" + PlayerPrefs.GetString(ConstantsGod.VIDEOPATH));
                     //Debug.Log("VideoPathFileName==="+PlayerPrefs.GetString(ConstantsGod.VIDEOPATH));
-                    Debug.LogError("Response===" + www.downloadHandler.text);
-                   
-                    UploadVideo UploadData = Gods.DeserializeJSON<UploadVideo>(www.downloadHandler.text);
+                    try
+                    {
+                        Debug.LogError("Response===" + www.downloadHandler.text);
+                        UploadVideo UploadData = Gods.DeserializeJSON<UploadVideo>(www.downloadHandler.text);
 
-                    if (UploadData.success)
-                    {
-                        updateValue = false;
-                        UploadingPenal.SetActive(false);
-                        ScriptComponent.GetComponent<ReplayCam>().microphoneSource.GetComponent<AudioSource>().Stop();
-                        VideoPenal.SetActive(true);
-                        ProgressUpadateText.text = string.Empty;
-                        //Destroy(main.gameObject);
-                        sceneCamera.gameObject.SetActive(true);
-                        renderCamera.gameObject.SetActive(true);
-                        single = true;
-                        DoneBtn.GetComponent<Button>().interactable = false;
-                        PoseAnimationPenal.SetActive(false);
-                        PoseAnimationPenal.GetComponent<Image>().enabled = true;
-                        StopAllCoroutines();
-                        VideoDataValue();
+                        if (UploadData.success)
+                        {
+                            CameraObject.GetComponent<AudioSource>().clip = null;
+                           // Destroy(main.gameObject);
+                            sceneCamera.gameObject.SetActive(true);
+                            renderCamera.gameObject.SetActive(true);
+                            single = true;
+                            updateValue = false;
+                            UploadingPenal.SetActive(false);
+                            ScriptComponent.GetComponent<ReplayCam>().microphoneSource.GetComponent<AudioSource>().Stop();
+                            VideoPenal.SetActive(true);
+                            ProgressUpadateText.text = string.Empty;
+
+
+
+                            closeBtn.SetActive(true);
+                            backgroundBtn.SetActive(true);
+                            DoneBtn.SetActive(true);
+                            toClose[5].SetActive(false);
+
+                            DoneBtn.GetComponent<Button>().interactable = false;
+                            PoseAnimationPenal.SetActive(false);
+                            PoseAnimationPenal.GetComponent<Image>().enabled = true;
+
+                            StopAllCoroutines();
+                            VideoDataValue();
+
+                            if (Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
+                            {
+                                Directory.Delete(Application.persistentDataPath + "/UploadVideo", true);
+                            }
+                        }
+                        else
+                        {
+                            UploadingPenal.SetActive(false);
+
+                            //if (Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
+                            //{
+                            //    Directory.Delete(Application.persistentDataPath + "/UploadVideo", true);
+                            //}
+                            closeBtn.SetActive(true);
+                            backgroundBtn.SetActive(true);
+                            DoneBtn.SetActive(true);
+                            toClose[5].SetActive(true);
+                            toClose[5].GetComponent<Button>().interactable = true;
+                            DoneBtn.GetComponent<Button>().interactable = true;
+                            VideoDataValue();
+                        }
                     }
-                    else
+                    catch(Exception e)
                     {
-                        UploadingPenal.SetActive(false);
-                        VideoDataValue();
+                        closeBtn.SetActive(true);
+                        backgroundBtn.SetActive(true);
+                        DoneBtn.SetActive(true);
+                        toClose[5].SetActive(true);
+                        toClose[5].GetComponent<Button>().interactable = true;
+                        DoneBtn.GetComponent<Button>().interactable = true;
                     }
                    
+                   
+                   
+
+                   
+                }
+            }
+            else
+            {
+                if (File.Exists(Application.persistentDataPath + "/SaveVideo/" + PlayerPrefs.GetString(ConstantsGod.VIDEOPATH)))
+                {
+                    WWWForm form = new WWWForm();
+
+                    byte[] videoData = File.ReadAllBytes(Application.persistentDataPath + "/SaveVideo/" + PlayerPrefs.GetString(ConstantsGod.VIDEOPATH));/*VideoPathString*/
+                    form.AddBinaryData("post_file", videoData, PlayerPrefs.GetString(ConstantsGod.VIDEOPATH), "video/mp4");
+
+                    using (UnityWebRequest www = UnityWebRequest.Post(ConstantsGod.UPLOADVIDEO, form))
+                    {
+                        www.SetRequestHeader("Authorization", "JWT " + PlayerPrefs.GetString(ConstantsGod.AUTH_TOKEN));
+                        www.SetRequestHeader("post_name", PlayerPrefs.GetString(ConstantsGod.VIDEOPATH));
+                        www.SetRequestHeader("token", ConstantsGod.DEFAULT_TOKEN);
+                        www.SetRequestHeader("update", "true");
+                        Debug.LogError("update value===" + updateValue.ToString());
+
+                        var oper = www.SendWebRequest();
+                        while (!oper.isDone)
+                        {
+
+                            if (www.isNetworkError || www.isHttpError)
+                            {
+                                yield break;
+                            }
+                            progress = www.uploadProgress * 100;
+                            ProgressUpadateText.text = progress.ToString("F0") + "%";
+                            Debug.Log("TEST5" + www.uploadProgress * 100);
+
+                            yield return null;
+                        }
+
+                        //Debug.Log("VideoPath==="+ Application.persistentDataPath + "/" + PlayerPrefs.GetString(ConstantsGod.VIDEOPATH));
+                        //Debug.Log("VideoPathFileName==="+PlayerPrefs.GetString(ConstantsGod.VIDEOPATH));
+
+                        try
+                        {
+                            Debug.LogError("Response===" + www.downloadHandler.text);
+
+                            UploadVideo UploadData = Gods.DeserializeJSON<UploadVideo>(www.downloadHandler.text);
+                            if (UploadData.success)
+                            {
+                                CameraObject.GetComponent<AudioSource>().clip = null;
+                               // Destroy(main.gameObject);
+
+                                updateValue = false;
+                                UploadingPenal.SetActive(false);
+                                ScriptComponent.GetComponent<ReplayCam>().microphoneSource.GetComponent<AudioSource>().Stop();
+                                VideoPenal.SetActive(true);
+                                ProgressUpadateText.text = string.Empty;
+
+                                //Destroy(main.gameObject);
+                                sceneCamera.gameObject.SetActive(true);
+                                renderCamera.gameObject.SetActive(true);
+                                single = true;
+
+                                closeBtn.SetActive(true);
+                                backgroundBtn.SetActive(true);
+                                DoneBtn.SetActive(true);
+                                toClose[5].SetActive(false);
+
+                                DoneBtn.GetComponent<Button>().interactable = false;
+                                PoseAnimationPenal.SetActive(false);
+                                PoseAnimationPenal.GetComponent<Image>().enabled = true;
+                                StopAllCoroutines();
+                                Vector3 temp = new Vector3(0f, -1.39f, 3.43f);
+                                currentAvatar.transform.position = temp;
+                                VideoDataValue();
+
+                                if (Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
+                                {
+                                    Directory.Delete(Application.persistentDataPath + "/UploadVideo", true);
+                                }
+                            }
+                            else
+                            {
+                                UploadingPenal.SetActive(false);
+                                //if (Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
+                                //{
+                                //    Directory.Delete(Application.persistentDataPath + "/UploadVideo", true);
+                                //}
+                                closeBtn.SetActive(true);
+                                backgroundBtn.SetActive(true);
+                                DoneBtn.SetActive(true);
+                                toClose[5].SetActive(true);
+                                toClose[5].GetComponent<Button>().interactable = true;
+                                DoneBtn.GetComponent<Button>().interactable = true;
+                                VideoDataValue();
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            closeBtn.SetActive(true);
+                            backgroundBtn.SetActive(true);
+                            DoneBtn.SetActive(true);
+                            toClose[5].SetActive(true);
+                            toClose[5].GetComponent<Button>().interactable = true;
+                            DoneBtn.GetComponent<Button>().interactable = true;
+                        }
+                    }
                 }
             }
 
 
         }
+       
     }
 
 
