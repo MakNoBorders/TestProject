@@ -31,21 +31,9 @@ public class CustomFaceMorph : MonoBehaviour
     int m_MovementDirection;
     bool m_HorOrVer;
 
-    int horMorphIndex; // in custom morph we can two blend shapes for one trigger
-    int verMorphIndex;
-    int verDir;
-    int horDir;
-    float movementScaler;
-
     // ** Is CustomMorph Panel Activated ** //
     [HideInInspector]
     public bool m_IsCustomMorphPanelActivated;
-
-
-    [Header("Testing")]
-    public GameObject m_SpriteToSpawn;
-    public Vector3 m_OffSet;
-    Mesh l_mesh;
 
 
     private void Awake()
@@ -66,6 +54,7 @@ public class CustomFaceMorph : MonoBehaviour
             UpdateTriggerState();
     }
 
+    #region Load Panel, Load Triggers
 
     public void OnLoadCustomFaceMorphPanel()
     {
@@ -73,6 +62,40 @@ public class CustomFaceMorph : MonoBehaviour
 
         LoadCustomBlendShapeTriggers();
     }
+
+    void LoadCustomBlendShapeTriggers()
+    {
+        float l_XMin, l_XMax, l_YMin, l_YMax;
+
+        for (int i = 0; i < 2; i++)
+        {
+            int l_Index = i;
+            l_XMin = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().XMin;
+            l_XMax = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().XMax;
+            l_YMin = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().YMin;
+            l_YMax = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().YMax;
+
+            int l_AssociatedBlendShape = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().m_BlendShapeIndex;
+            bool l_HorOrVer = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().m_HorOrVer;
+            int l_MovementDirection = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().m_MovementDirection;
+
+            if (m_IsCustomBlendShapesApplied)
+            {
+                if (l_HorOrVer)
+                {
+                    if (l_MovementDirection == 1)
+                        m_CustomBlendTriggers[l_Index].transform.position = new Vector3((l_XMax - l_XMin) * PlayerPrefs.GetFloat("CustomFaceMorph" + l_AssociatedBlendShape) * 0.01f + l_XMin, m_CustomBlendTriggers[l_Index].transform.position.y, 0);
+
+                    if (l_MovementDirection == -1)
+                        m_CustomBlendTriggers[l_Index].transform.position = new Vector3(-(l_XMax - l_XMin) * PlayerPrefs.GetFloat("CustomFaceMorph" + l_AssociatedBlendShape) * 0.01f + l_XMax, m_CustomBlendTriggers[l_Index].transform.position.y, 0);
+
+                    m_XMorph_Slider.value = PlayerPrefs.GetFloat("CustomFaceMorph" + l_AssociatedBlendShape);
+                }
+            }
+        }
+    }
+
+    #endregion
 
     //** When we select a trigger on the custom morph panel, then is it initialize in this class, and its movemnet is also controlled by this class
 
@@ -90,22 +113,13 @@ public class CustomFaceMorph : MonoBehaviour
 
         m_BlendShapeIndex = l_BlendShapeIndex;
         m_MovementDirection = l_MovementDirection;
-        movementScaler = l_MovementScaler;
-
+        //movementScaler = l_MovementScaler;
         m_HorOrVer = l_HorOrVer;
 
         isMorphTriggerSelected = true;
 
-        //horMorphIndex = hormorphindex;
-        //verMorphIndex = vermorphindex;
-        //horDir = hordir;
-        //verDir = verdir;
-
         m_XMorph_Slider.gameObject.SetActive(l_HorOrVer);
         m_YMorph_Slider.gameObject.SetActive(!l_HorOrVer);
-
-        //m_XMorph_Slider.value = 0;
-        //m_YMorph_Slider.value = 0;
     }
 
     void UpdateTriggerState()
@@ -114,114 +128,60 @@ public class CustomFaceMorph : MonoBehaviour
         {
             if (m_HorOrVer)
             {
-                print("Sidler x");
                 m_XMorph_Slider.value += m_MovementDirection * Input.GetAxis("Mouse X") * 10;
             }
 
             if (!m_HorOrVer)
             {
-                print("Sidler x");
                 m_YMorph_Slider.value += m_MovementDirection * Input.GetAxis("Mouse Y") * 10;
             }
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            //if (isMorphTriggerSelected)
-              //  m_FaceMorphTriggerSelected.GetComponent<SpriteRenderer>().color = m_ColorOne;
             isMorphTriggerSelected = false;
-            //m_FaceMorphTriggerSelected = null;
-        }
-
-        //m_CharacterFace.GetComponent<SkinnedMeshRenderer>().BakeMesh(l_mesh);
-        //Vector3 setposition = transform.position + transform.InverseTransformPoint(l_mesh.vertices[l_mesh.triangles[1616 * 3 + 1]]) + m_OffSet;
-        //Vector3 l_SpawnPosition = setposition;
-        //m_SpriteToSpawn.transform.position = l_SpawnPosition;
-    }
-
-    void LoadCustomBlendShapeTriggers()
-    {
-        float l_XMin, l_XMax, l_YMin, l_YMax;
-
-        int l_Index = 1;
-
-        l_XMin = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().XMin;
-        l_XMax = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().XMax;
-        l_YMin = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().YMin;
-        l_YMax = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().YMax;
-
-        int l_AssociatedBlendShape = m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().m_BlendShapeIndex;
-
-        bool l_HorOrVer= m_CustomBlendTriggers[l_Index].GetComponent<CustomFaceMorphTrigger>().m_HorOrVer;
-
-        if (m_IsCustomBlendShapesApplied)
-        {
-            //if(!m_HorOrVer)
-            //m_CustomBlendTriggers[l_Index].transform.position = new Vector3(m_CustomBlendTriggers[l_Index].transform.position.x, -(l_YMax - l_YMin) * PlayerPrefs.GetFloat("CustomFaceMorph" + l_AssociatedBlendShape) * 0.01f + l_YMax, 0);
-
-            if (m_HorOrVer)
-            { }
-                m_CustomBlendTriggers[l_Index].transform.position = new Vector3( (l_XMax - l_XMin) * PlayerPrefs.GetFloat("CustomFaceMorph" + l_AssociatedBlendShape) * 0.01f + l_XMin, m_CustomBlendTriggers[l_Index].transform.position.y, 0);
-
-
-            m_XMorph_Slider.value = PlayerPrefs.GetFloat("CustomFaceMorph" + l_AssociatedBlendShape);
         }
     }
 
-    void ApplyConstraints(GameObject selectedObject,float xmin,float xmax,float ymin,float ymax)
-    {
-        float xTemp = Mathf.Clamp(selectedObject.transform.position.x, xmin, xmax);
-        float yTemp = Mathf.Clamp(selectedObject.transform.position.y, ymin, ymax);
-        selectedObject.transform.position = new Vector3(xTemp, yTemp, -1);
-    }
+    
+
+    
 
     public void ApplyFaceMorph() // Changing the FaceMorph Values With Sliders
-    {
+    { 
+        // ** Adjusting The BlendShapes
+
         if (m_HorOrVer)
             m_FaceSkinMeshRenderer.SetBlendShapeWeight(m_BlendShapeIndex, m_XMorph_Slider.value);
 
         if (!m_HorOrVer)
             m_FaceSkinMeshRenderer.SetBlendShapeWeight(m_BlendShapeIndex, m_YMorph_Slider.value);
 
-        //if (horMorphIndex != -1)
-        //    m_FaceSkinMeshRenderer.SetBlendShapeWeight(horMorphIndex, m_XMorph_Slider.value);
-
-        //if (verMorphIndex != -1)
-        //    m_FaceSkinMeshRenderer.SetBlendShapeWeight(verMorphIndex, m_YMorph_Slider.value);
-
         if (m_FaceMorphTriggerSelected == null) return;
 
+        //** Adjusting The Position Of The Trigger ,Sync with the slider 
+
+        Vector3 l_TriggerPosition = m_FaceMorphTriggerSelected.transform.position;
 
         if (m_HorOrVer)
         {
-            print("inside hori");
-
             if (m_MovementDirection == -1)
-                m_FaceMorphTriggerSelected.transform.position = new Vector3(-(xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMax, m_FaceMorphTriggerSelected.transform.position.y, 3);
+                m_FaceMorphTriggerSelected.transform.position = new Vector3(-(xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMax, l_TriggerPosition.y, l_TriggerPosition.z);
 
             if (m_MovementDirection == 1)
-                m_FaceMorphTriggerSelected.transform.position = new Vector3((xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMin, m_FaceMorphTriggerSelected.transform.position.y, 3);
-
+                m_FaceMorphTriggerSelected.transform.position = new Vector3((xMax - xMin) * m_XMorph_Slider.value * 0.01f + xMin, l_TriggerPosition.y, l_TriggerPosition.z);
         }
 
         if (!m_HorOrVer)
         {
-
-
-
-
             if (m_MovementDirection == -1)
-                m_FaceMorphTriggerSelected.transform.position = new Vector3(m_FaceMorphTriggerSelected.transform.position.x, -(yMax - yMin) * m_YMorph_Slider.value * 0.01f + yMax, 3);
+                m_FaceMorphTriggerSelected.transform.position = new Vector3(l_TriggerPosition.x, -(yMax - yMin) * m_YMorph_Slider.value * 0.01f + yMax, l_TriggerPosition.z);
 
             if (m_MovementDirection == 1)
-                m_FaceMorphTriggerSelected.transform.position = new Vector3(m_FaceMorphTriggerSelected.transform.position.x, (yMax - yMin) * m_YMorph_Slider.value * 0.01f + yMin, 3);
-
-
+                m_FaceMorphTriggerSelected.transform.position = new Vector3(l_TriggerPosition.x, (yMax - yMin) * m_YMorph_Slider.value * 0.01f + yMin, l_TriggerPosition.z);
         }
-        //Vector3 pos = m_FaceMorphTriggerSelected.transform.position + new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), -1) * movementScaler;
-        //m_FaceMorphTriggerSelected.transform.position = Vector3.Lerp(m_FaceMorphTriggerSelected.transform.position, pos, 0.0125f);
-
-        //ApplyConstraints(m_FaceMorphTriggerSelected, xMin, xMax, yMin, yMax);
+        
+        //** If The Trigger Has Any Symetric Point Then Move It
 
         if (m_AssociatedTrigger != null)
         {
@@ -234,22 +194,13 @@ public class CustomFaceMorph : MonoBehaviour
 
             if (m_HorOrVer)
             {
-                print("inside hori");
+                if (m_MovementDirection == 1)
+                    m_AssociatedTrigger.transform.position = new Vector3(-(l_XMax - l_XMin) * m_XMorph_Slider.value * 0.01f + l_XMax, m_AssociatedTrigger.transform.position.y, 3);
 
                 if (m_MovementDirection == -1)
-                m_AssociatedTrigger.transform.position = new Vector3(-(l_XMax - l_XMin) * m_XMorph_Slider.value * 0.01f + l_XMax, m_AssociatedTrigger.transform.position.y, 3);
-
-                if (m_MovementDirection == 1)
                     m_AssociatedTrigger.transform.position = new Vector3((l_XMax - l_XMin) * m_XMorph_Slider.value * 0.01f + l_XMin, m_AssociatedTrigger.transform.position.y, 3);
-
             }
-
-
-            //Vector3 postwo = m_AssociatedPoint.transform.position + new Vector3(-Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), -1);
-            //m_AssociatedPoint.transform.position = Vector3.Lerp(m_AssociatedPoint.transform.position, postwo, 0.0125f);
         }
-
-
     }
 
     #endregion
@@ -293,6 +244,13 @@ public class CustomFaceMorph : MonoBehaviour
 
     #region Waste Code
 
+    void ApplyConstraints(GameObject selectedObject, float xmin, float xmax, float ymin, float ymax)
+    {
+        float xTemp = Mathf.Clamp(selectedObject.transform.position.x, xmin, xmax);
+        float yTemp = Mathf.Clamp(selectedObject.transform.position.y, ymin, ymax);
+        selectedObject.transform.position = new Vector3(xTemp, yTemp, -1);
+    }
+
     public void ResetMorphing()
     {
         int count = m_FaceSkinMeshRenderer.sharedMesh.blendShapeCount;
@@ -305,10 +263,10 @@ public class CustomFaceMorph : MonoBehaviour
 
     public void InstantiatePoint()
     {
-        Mesh mesh = m_CharacterFace.GetComponent<SkinnedMeshRenderer>().sharedMesh;
+        //Mesh mesh = m_CharacterFace.GetComponent<SkinnedMeshRenderer>().sharedMesh;
 
-        Vector3 l_SpawnPosition = transform.position + transform.InverseTransformPoint(mesh.vertices[mesh.triangles[1616 * 3 + 1]]) + m_OffSet;
-        m_SpriteToSpawn.transform.position = l_SpawnPosition;
+        //Vector3 l_SpawnPosition = transform.position + transform.InverseTransformPoint(mesh.vertices[mesh.triangles[1616 * 3 + 1]]) + m_OffSet;
+        //m_SpriteToSpawn.transform.position = l_SpawnPosition;
     }
 
     #endregion
