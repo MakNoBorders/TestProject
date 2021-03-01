@@ -15,17 +15,17 @@ namespace NatSuite.Recorders.Internal {
 
         public static string GetPath (string extension) {
 
-            if (AB.SaveBtnClick)
+            if (CharacterLoadAnimation.saveVideoBtnClick)
             {
-                AB.SaveBtnClick = false;
+                CharacterLoadAnimation.saveVideoBtnClick = false;
                 if (directory == null)
                 {
-                    Debug.LogError("111111111" + AB.SaveBtnClick);
+                    Debug.LogError("111111111" + CharacterLoadAnimation.saveVideoBtnClick);
 
-                    Debug.LogError("22222222" + AB.SaveBtnClick);
+                    Debug.LogError("22222222" + CharacterLoadAnimation.saveVideoBtnClick);
                     if (!Directory.Exists(Application.persistentDataPath + "/SaveVideo"))
                     {
-                        Debug.LogError("333333" + AB.SaveBtnClick);
+                        Debug.LogError("333333" + CharacterLoadAnimation.saveVideoBtnClick);
                         Directory.CreateDirectory(Application.persistentDataPath + "/" + "SaveVideo");
                     }
                     var editor = Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.WindowsEditor;
@@ -35,10 +35,10 @@ namespace NatSuite.Recorders.Internal {
                 {
                   
 
-                    Debug.LogError("44444444" + AB.SaveBtnClick);
+                    Debug.LogError("44444444" + CharacterLoadAnimation.saveVideoBtnClick);
                     if (!Directory.Exists(Application.persistentDataPath + "/SaveVideo"))
                     {
-                        Debug.LogError("5555555" + AB.SaveBtnClick);
+                        Debug.LogError("5555555" + CharacterLoadAnimation.saveVideoBtnClick);
                         Directory.CreateDirectory(Application.persistentDataPath + "/" + "SaveVideo");
                     }
                     var editor = Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.WindowsEditor;
@@ -55,7 +55,7 @@ namespace NatSuite.Recorders.Internal {
                 {
                     if (!Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
                     {
-                        Debug.LogError("5555555" + AB.SaveBtnClick);
+                        Debug.LogError("5555555" + CharacterLoadAnimation.saveVideoBtnClick);
                         Directory.CreateDirectory(Application.persistentDataPath + "/" + "UploadVideo");
                     }
                     var editor = Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.WindowsEditor;
@@ -65,7 +65,7 @@ namespace NatSuite.Recorders.Internal {
                 {
                     if (!Directory.Exists(Application.persistentDataPath + "/UploadVideo"))
                     {
-                        Debug.LogError("5555555" + AB.SaveBtnClick);
+                        Debug.LogError("5555555" + CharacterLoadAnimation.saveVideoBtnClick);
                         Directory.CreateDirectory(Application.persistentDataPath + "/" + "UploadVideo");
                     }
                     var editor = Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.WindowsEditor;
